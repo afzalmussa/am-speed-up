@@ -34,18 +34,45 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: test-results
           path: TestResults
           if-no-files-found: ignore
+
+      # Lists each failed test on the run's summary page and as an annotation on the pull request.
+      - name: Show failed tests
+        if: failure()
+        shell: pwsh
+        run: |
+          function Escape([string]$value, [switch]$property) {
+            $value = $value -replace '%', '%25' -replace "`r", '%0D' -replace "`n", '%0A'
+            if ($property) { $value = $value -replace ':', '%3A' -replace ',', '%2C' }
+            return $value
+          }
+          $ns = @{ t = 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010' }
+          foreach ($file in Get-ChildItem TestResults -Filter *.trx -Recurse -ErrorAction SilentlyContinue) {
+            [xml]$trx = Get-Content $file.FullName -Raw
+            foreach ($info in Select-Xml -Xml $trx -XPath '//t:RunInfo' -Namespace $ns) {
+              $text = $info.Node.Text
+              Write-Output "::warning title=$(Escape "Test run note ($($file.Name))" -property)::$(Escape $text)"
+            }
+            foreach ($result in Select-Xml -Xml $trx -XPath '//t:UnitTestResult[@outcome="Failed"]' -Namespace $ns) {
+              $node = $result.Node
+              $message = [string]$node.Output.ErrorInfo.Message
+              $stack = [string]$node.Output.ErrorInfo.StackTrace
+              $shortStack = ($stack -split "`n" | Select-Object -First 6) -join "`n"
+              Write-Output "::error title=$(Escape "Test failed: $($node.testName)" -property)::$(Escape "$message`n$shortStack")"
+              "### $($node.testName)`n``````text`n$message`n$stack`n``````" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+            }
+          }
 
       - name: Publish single-file app
         run: dotnet publish src/AMSpeedUp -c Release -o publish
 
       # Download this from the run's Summary page to test a build without installing anything.
       - name: Upload AMSpeedUp.exe
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: AMSpeedUp-exe
           path: publish/AMSpeedUp.exe
