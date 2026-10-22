@@ -99,6 +99,35 @@ public class WindowSmokeTests
         });
     }
 
+    [Theory]
+    [InlineData("main-window", 1040, 680, false)]
+    [InlineData("main-window-small-laptop-150-percent", 853, 460, false)]
+    [InlineData("main-window-test-mode", 1040, 680, true)]
+    public void Main_window_renders_at_different_sizes(string name, double width, double height, bool dryRun)
+    {
+        WpfHost.Run(() =>
+        {
+            var window = new MainWindow { DataContext = CreateViewModel(dryRun) };
+
+            var bitmap = Screenshots.Render(window, name, width, height);
+
+            Assert.True(Screenshots.HasContent(bitmap));
+            window.Close();
+        });
+    }
+
+    [Fact]
+    public void About_window_renders()
+    {
+        WpfHost.Run(() =>
+        {
+            var window = new AboutWindow { DataContext = CreateViewModel() };
+
+            Assert.True(Screenshots.HasContent(Screenshots.Render(window, "about", 560)));
+            window.Close();
+        });
+    }
+
     [Fact]
     public void Message_window_shows_heading_and_text()
     {

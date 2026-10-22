@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/afzalmussa/am-speed-up/presets/preset.schema.json",
+  "title": "AM Speed Up preset",
+  "description": "A list of apps AM Speed Up can offer to remove. See presets/README.md.",
+  "type": "object",
+  "required": ["id", "name", "description", "tier", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Unique id, lowercase with dashes." },
+    "name": { "type": "string", "minLength": 1, "description": "Group heading shown in the app." },
+    "description": { "type": "string", "minLength": 1, "description": "One sentence shown under the heading." },
+    "tier": { "enum": ["free", "pro"], "description": "Whether the preset needs a Pro licence." },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "match", "name", "description", "recommendation"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "enum": ["store", "desktop"], "description": "store: Microsoft Store app. desktop: traditional program." },
+          "match": {
+            "type": "string",
+            "minLength": 4,
+            "description": "Wildcard pattern (* and ?). Store apps: the package name. Desktop programs: the name in Installed apps."
+          },
+          "publisher": { "type": "string", "description": "Optional wildcard pattern for the publisher. Desktop programs only." },
+          "name": { "type": "string", "minLength": 1, "description": "Friendly name shown in the app." },
+          "description": { "type": "string", "minLength": 1, "description": "One short sentence for non-technical users." },
+          "recommendation": {
+            "enum": ["remove", "optional", "keep"],
+            "description": "remove: ticked by default. optional: shown, not ticked. keep: shown with the reason, not ticked."
+          },
+          "antivirus": { "type": "boolean", "description": "True for antivirus, so Microsoft Defender is checked after removal." },
+          "vendorTool": { "enum": ["mcafee", "norton"], "description": "Remove with the vendor's own official removal tool." }
+        }
+      }
+    }
+  }
+}

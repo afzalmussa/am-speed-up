@@ -28,12 +28,7 @@ public sealed class FileAppLog : IAppLog
     /// <summary>
     /// The standard log folder: %ProgramData%\AMSoftware\SpeedUp\logs on Windows.
     /// </summary>
-    public static string DefaultDirectory =>
-        Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-            "AMSoftware",
-            "SpeedUp",
-            "logs");
+    public static string DefaultDirectory => Configuration.AppPaths.Logs;
 
     public void Write(LogLevel level, string message, Exception? exception = null)
     {
