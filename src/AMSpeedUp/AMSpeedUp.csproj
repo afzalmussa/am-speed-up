@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>AMSpeedUp</AssemblyName>
+    <RootNamespace>AMSpeedUp</RootNamespace>
+    <ApplicationIcon>..\..\assets\app.ico</ApplicationIcon>
+    <!-- requireAdministrator, Windows 10/11 support and per-monitor DPI awareness. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <!-- "dotnet publish" produces one self-contained AMSpeedUp.exe for 64-bit Windows. -->
+  <PropertyGroup Condition="'$(_IsPublishing)' == 'true'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="..\..\assets\logo.png" Link="Assets\logo.png" />
+    <Resource Include="..\..\assets\logo-on-dark.png" Link="Assets\logo-on-dark.png" />
+    <Resource Include="..\..\assets\app.ico" Link="Assets\app.ico" />
+    <Resource Include="..\..\assets\fonts\JetBrainsMono-Bold.ttf" Link="Fonts\JetBrainsMono-Bold.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AMSpeedUp.Core\AMSpeedUp.Core.csproj" />
+    <ProjectReference Include="..\AMSpeedUp.Windows\AMSpeedUp.Windows.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AMSpeedUp.UI.Tests" />
+  </ItemGroup>
+
+</Project>

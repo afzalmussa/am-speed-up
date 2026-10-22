@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest something that would make AM Speed Up better.
+title: "Idea: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to share an idea. Plain words are perfect, there's no need for technical detail.
+
+        **This page is public.** Please don't include personal details.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like AM Speed Up to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: How would it help you?
+      description: For example, "my laptop came with a program I can't get rid of" or "I'd like to see how much space I saved".
+
+  - type: input
+    id: program
+    attributes:
+      label: Is it about a particular program or make of PC? (optional)
+      description: For example, "HP Support Assistant" or "Dell laptop".
