@@ -1,0 +1,121 @@
+<Window x:Class="AMSpeedUp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AMSpeedUp.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+        Title="AM Speed Up"
+        Icon="pack://application:,,,/AMSpeedUp;component/Assets/app.ico"
+        Style="{StaticResource AppWindowStyle}"
+        Width="1040" Height="680" MinWidth="720" MinHeight="480"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header: logo, name, free/Pro status and licence button -->
+        <Border Grid.Row="0" Background="{StaticResource DarkBrush}" Padding="24,14">
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="pack://application:,,,/AMSpeedUp;component/Assets/logo-on-dark.png"
+                           Width="52" Height="52" Margin="0,0,14,0" RenderOptions.BitmapScalingMode="HighQuality"
+                           AutomationProperties.Name="AM Software logo" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ProductName}" FontFamily="{StaticResource HeadingFont}"
+                                   FontWeight="Bold" FontSize="24" Foreground="{StaticResource OnDarkTextBrush}" />
+                        <TextBlock Text="Make your PC faster, safely" FontSize="15"
+                                   Foreground="{StaticResource OnDarkMutedTextBrush}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <WrapPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Border BorderBrush="{StaticResource MintBrush}" BorderThickness="1" CornerRadius="16"
+                            Padding="14,5" Margin="0,4,12,4" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding LicenceStatusText}" Foreground="{StaticResource MintBrush}"
+                                   FontWeight="SemiBold" FontSize="15" />
+                    </Border>
+                    <Button Content="Enter licence key" Style="{StaticResource HeaderButton}"
+                            Command="{Binding EnterLicenceKeyCommand}" Margin="0,4,10,4" />
+                    <Button Content="About" Style="{StaticResource HeaderButton}"
+                            Command="{Binding ShowAboutCommand}" Margin="0,4,0,4" />
+                </WrapPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Only shown when started with dry-run, so it's obvious nothing will really change -->
+        <Border Grid.Row="1" Background="{StaticResource WarningBackgroundBrush}"
+                BorderBrush="{StaticResource WarningBorderBrush}" BorderThickness="0,0,0,2" Padding="24,10"
+                Visibility="{Binding IsDryRun, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock Style="{StaticResource BodyText}" FontWeight="SemiBold"
+                       Text="Test mode is on. The app will show what it would do, but nothing on this PC will be changed." />
+        </Border>
+
+        <TabControl Grid.Row="2" Style="{StaticResource MainTabControl}" ItemContainerStyle="{StaticResource MainTabItem}">
+            <TabItem Header="Remove bloat" AutomationProperties.Name="Remove bloat">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="32,24" MaxWidth="900" HorizontalAlignment="Left">
+                        <TextBlock Style="{StaticResource HeadingText}" Text="Remove unwanted programs" />
+                        <TextBlock Style="{StaticResource BodyText}" Margin="0,10,0,20"
+                                   Text="Find and remove programs you don't need, like games and trial software that came with your PC. You'll see exactly what will be removed before anything happens, and nothing is removed until you say yes." />
+                        <Border Style="{StaticResource Card}">
+                            <TextBlock Style="{StaticResource MutedText}" Text="This part of the app is still being built." />
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Startup" AutomationProperties.Name="Startup">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="32,24" MaxWidth="900" HorizontalAlignment="Left">
+                        <TextBlock Style="{StaticResource HeadingText}" Text="Choose what starts with your PC" />
+                        <TextBlock Style="{StaticResource BodyText}" Margin="0,10,0,20"
+                                   Text="Some programs start every time you turn on your PC, which can make it slow to get going. You can turn them off here, and turn them back on whenever you like." />
+                        <Border Style="{StaticResource Card}">
+                            <TextBlock Style="{StaticResource MutedText}" Text="This part of the app is still being built." />
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Free up space" AutomationProperties.Name="Free up space">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="32,24" MaxWidth="900" HorizontalAlignment="Left">
+                        <TextBlock Style="{StaticResource HeadingText}" Text="Free up space" />
+                        <TextBlock Style="{StaticResource BodyText}" Margin="0,10,0,20"
+                                   Text="Clear out temporary files and other clutter that Windows doesn't need. You'll see how much space you'll get back before anything is deleted." />
+                        <Border Style="{StaticResource Card}">
+                            <TextBlock Style="{StaticResource MutedText}" Text="This part of the app is still being built." />
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- Footer -->
+        <Border Grid.Row="3" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,1,0,0" Padding="24,8">
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="AM Software, " FontSize="15" VerticalAlignment="Center" />
+                    <Button Content="amsoftware.uk" Style="{StaticResource LinkButton}" Command="{Binding OpenWebsiteCommand}"
+                            Padding="0,6" />
+                    <Button Content="Get help" Style="{StaticResource LinkButton}" Command="{Binding GetHelpCommand}"
+                            Margin="16,0,0,0" />
+                </StackPanel>
+                <WrapPanel DockPanel.Dock="Right" VerticalAlignment="Center">
+                    <Button Content="View log" Style="{StaticResource LinkButton}" Command="{Binding ViewLogCommand}" Margin="0,0,14,0" />
+                    <Button Content="Report a problem" Style="{StaticResource LinkButton}" Command="{Binding ReportProblemCommand}" Margin="0,0,14,0" />
+                    <Button Content="Check for updates" Style="{StaticResource LinkButton}" Command="{Binding CheckForUpdatesCommand}" Margin="0,0,14,0" />
+                    <TextBlock Text="{Binding VersionText}" Style="{StaticResource MutedText}" FontSize="15" VerticalAlignment="Center" />
+                </WrapPanel>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>

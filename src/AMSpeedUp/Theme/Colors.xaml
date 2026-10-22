@@ -1,0 +1,37 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- AM Software brand colours -->
+    <Color x:Key="BrandDarkColor">#1B1C2B</Color>
+    <Color x:Key="BrandMintColor">#34D399</Color>
+    <Color x:Key="BrandLightColor">#E3E5F1</Color>
+    <Color x:Key="BrandTextColor">#23243A</Color>
+
+    <SolidColorBrush x:Key="DarkBrush" Color="{StaticResource BrandDarkColor}" />
+    <SolidColorBrush x:Key="MintBrush" Color="{StaticResource BrandMintColor}" />
+    <SolidColorBrush x:Key="LightBrush" Color="{StaticResource BrandLightColor}" />
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource BrandTextColor}" />
+
+    <!-- Supporting shades. Text colours are checked for at least 4.5:1 contrast on their backgrounds. -->
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="MutedTextBrush" Color="#4A4C66" />
+    <SolidColorBrush x:Key="OnDarkTextBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="OnDarkMutedTextBrush" Color="#C9CBDD" />
+    <SolidColorBrush x:Key="MintHoverBrush" Color="#2BBF89" />
+    <SolidColorBrush x:Key="MintPressedBrush" Color="#22A576" />
+    <SolidColorBrush x:Key="LinkBrush" Color="#0B6E4A" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#C5C8DA" />
+    <SolidColorBrush x:Key="SubtleHoverBrush" Color="#F1F2F8" />
+    <SolidColorBrush x:Key="OnDarkHoverBrush" Color="#2C2E45" />
+    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#D8DAE6" />
+    <SolidColorBrush x:Key="DisabledTextBrush" Color="#6B6D85" />
+    <SolidColorBrush x:Key="WarningBackgroundBrush" Color="#FFF4D6" />
+    <SolidColorBrush x:Key="WarningBorderBrush" Color="#D99A00" />
+    <SolidColorBrush x:Key="FocusBrush" Color="#1B1C2B" />
+    <SolidColorBrush x:Key="OnDarkFocusBrush" Color="#34D399" />
+
+    <!-- Fonts. JetBrains Mono is bundled under the SIL Open Font Licence; Segoe UI is the fallback. -->
+    <FontFamily x:Key="BodyFont">Segoe UI</FontFamily>
+    <FontFamily x:Key="HeadingFont">pack://application:,,,/AMSpeedUp;component/Fonts/#JetBrains Mono, Segoe UI</FontFamily>
+
+</ResourceDictionary>
