@@ -64,7 +64,7 @@
                 </WrapPanel>
 
                 <TextBlock Style="{StaticResource MutedText}" FontSize="14" LineHeight="20" Margin="0,16,0,0"
-                           Text="Copyright (c) 2026 AM Software. The source code is published under the PolyForm Noncommercial License 1.0.0. Headings use the JetBrains Mono font, licensed under the SIL Open Font License 1.1." />
+                           Text="Copyright (c) 2026 Afzal Mussa, trading as AM Software. This app is free for anyone to use, including businesses. The source code is published under the PolyForm Noncommercial License 1.0.0. Headings use the JetBrains Mono font, licensed under the SIL Open Font License 1.1." />
             </StackPanel>
         </ScrollViewer>
 
