@@ -1,0 +1,62 @@
+name: Something went wrong
+description: Tell us about a problem with AM Speed Up.
+title: "Problem: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for letting us know. You don't need to be technical to fill this in, just tell us what you saw.
+
+        **This page is public.** Please don't include passwords, licence keys, email addresses or other personal details.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Tell us what you were doing and what went wrong. If there was a message on screen, copy the words here.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Which part of the app were you using?
+      options:
+        - Remove bloat
+        - Startup
+        - Free up space
+        - Licence key
+        - Something else
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Which version of AM Speed Up do you have?
+      description: It's shown at the bottom right of the app window, for example "Version 0.1.0".
+
+  - type: dropdown
+    id: windows
+    attributes:
+      label: Which version of Windows do you have?
+      options:
+        - Windows 11
+        - Windows 10
+        - Not sure
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Log (optional, but very helpful)
+      description: |
+        Click "View log" at the bottom of the app. Copy the lines from around the time the problem happened and paste them here.
+        Please read them first and remove anything you'd rather keep private.
+      render: text

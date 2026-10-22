@@ -1,0 +1,67 @@
+name: Build and test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: Windows build, all tests and app download
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore AMSpeedUp.sln
+
+      - name: Build
+        run: dotnet build AMSpeedUp.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test AMSpeedUp.sln -c Release --no-build --logger trx --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+          if-no-files-found: ignore
+
+      - name: Publish single-file app
+        run: dotnet publish src/AMSpeedUp -c Release -o publish
+
+      # Download this from the run's Summary page to test a build without installing anything.
+      - name: Upload AMSpeedUp.exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: AMSpeedUp-exe
+          path: publish/AMSpeedUp.exe
+          if-no-files-found: error
+          retention-days: 14
+
+  core-on-linux:
+    # Proves AMSpeedUp.Core stays free of Windows-only code.
+    name: Core tests on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Test Core
+        run: dotnet test tests/AMSpeedUp.Tests -c Release

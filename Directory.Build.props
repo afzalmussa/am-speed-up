@@ -1,0 +1,16 @@
+<Project>
+  <!-- Settings shared by every project in the solution. -->
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <Company>AM Software</Company>
+    <Product>AM Speed Up</Product>
+    <Copyright>Copyright (c) 2026 Afzal Mussa, trading as AM Software</Copyright>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Lets the Windows-only projects compile on Linux and macOS (for example in Claude Code on the web). -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- Debug symbols inside the DLLs, so error logs show line numbers and publish leaves no .pdb files. -->
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+</Project>
