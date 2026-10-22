@@ -52,8 +52,9 @@ public partial class App : Application
         }
 
         var settings = AppSettings.LoadEmbedded();
-        var dialogs = new DialogService();
-        var viewModel = new MainViewModel(_log, new WindowsShellLauncher(_log), dialogs, settings, options);
+        var shell = new WindowsShellLauncher(_log);
+        var dialogs = new DialogService(shell);
+        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options);
         dialogs.MainViewModel = viewModel;
 
         var window = new MainWindow { DataContext = viewModel };

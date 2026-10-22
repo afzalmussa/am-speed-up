@@ -1,5 +1,15 @@
 namespace AMSpeedUp.Core.Platform;
 
+/// <summary>Windows settings pages the app can open for the user. A fixed list, so nothing else can be launched this way.</summary>
+public enum WindowsPage
+{
+    /// <summary>Windows Security, on the "Virus and threat protection" page.</summary>
+    VirusProtection,
+
+    /// <summary>The "System Protection" tab where System Restore is turned on.</summary>
+    SystemProtection,
+}
+
 /// <summary>Opens web pages, files and folders with whatever Windows normally uses for them.</summary>
 public interface IShellLauncher
 {
@@ -10,4 +20,6 @@ public interface IShellLauncher
     bool OpenFile(string path);
 
     bool OpenFolder(string path);
+
+    bool OpenWindowsPage(WindowsPage page);
 }
