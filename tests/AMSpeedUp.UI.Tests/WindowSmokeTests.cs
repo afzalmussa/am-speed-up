@@ -132,9 +132,10 @@ public class WindowSmokeTests
     }
 
     // IsVisible is false for any window that isn't on screen, so check Visibility up the tree instead.
+    // Stops below the Window itself, whose Visibility stays Collapsed until it is shown.
     private static bool IsVisibleInTree(FrameworkElement element)
     {
-        for (DependencyObject? current = element; current is not null; current = LogicalTreeHelper.GetParent(current))
+        for (DependencyObject? current = element; current is not null and not Window; current = LogicalTreeHelper.GetParent(current))
         {
             if (current is UIElement { Visibility: not Visibility.Visible })
             {
