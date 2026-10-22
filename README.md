@@ -90,6 +90,10 @@ Thanks for your interest. Code contributions aren't being accepted at the moment
 
 ## Licence
 
-The source code is available under the [PolyForm Noncommercial License 1.0.0](LICENSE). You're welcome to read it, build it and change it for personal and other noncommercial use, but you may not sell it or use it commercially without permission from AM Software. This is a "source available" licence rather than an open source one.
+**Using the app:** anyone, including businesses and other organisations, may download and use the official releases of AM Speed Up from the [Releases page](https://github.com/afzalmussa/am-speed-up/releases). Pro features need a licence key.
+
+**Using the source code:** the code is available under the [PolyForm Noncommercial License 1.0.0](LICENSE). You're welcome to read it, build it and change it for personal and other noncommercial use, but you may not sell it, redistribute it or use the code commercially without permission from AM Software. This is a "source available" licence rather than an open source one.
+
+The exact terms, including the extra permission for using official releases, are in [LICENSE](LICENSE).
 
 Third-party components and their licences are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
