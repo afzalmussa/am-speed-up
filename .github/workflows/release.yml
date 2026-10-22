@@ -1,0 +1,56 @@
+name: Release
+
+# Push a tag like v0.1.0 to publish AMSpeedUp.exe as a GitHub Release.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: windows-latest
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Work out the version from the tag
+        shell: pwsh
+        run: |
+          $version = $env:TAG.TrimStart('v')
+          if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') {
+            throw "Tag '$env:TAG' should look like v1.2.3 or v1.2.3-beta.1"
+          }
+          "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Test
+        run: dotnet test AMSpeedUp.sln -c Release -p:Version=${{ env.VERSION }} --logger GitHubActions
+
+      - name: Publish single-file app
+        run: dotnet publish src/AMSpeedUp -c Release -p:Version=${{ env.VERSION }} -o publish
+
+      # The file name must stay AMSpeedUp.exe so the "latest download" link never breaks.
+      - name: Check the file name and write a checksum
+        shell: pwsh
+        run: |
+          $exe = 'publish/AMSpeedUp.exe'
+          if (-not (Test-Path $exe)) { throw "publish/AMSpeedUp.exe was not produced" }
+          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  AMSpeedUp.exe" | Out-File publish/AMSpeedUp.exe.sha256 -Encoding ascii -NoNewline
+
+      - name: Create GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $flags = @('--title', $env:TAG, '--generate-notes')
+          if ($env:VERSION.Contains('-')) { $flags += '--prerelease' }
+          gh release create $env:TAG publish/AMSpeedUp.exe publish/AMSpeedUp.exe.sha256 @flags

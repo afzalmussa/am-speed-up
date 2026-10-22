@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Real Windows implementations of the service interfaces in AMSpeedUp.Core. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>AMSpeedUp.Windows</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AMSpeedUp.Core\AMSpeedUp.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Business logic, presets, licensing and service interfaces.
+       No UI and no Windows-only APIs, so it builds and tests on any OS. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>AMSpeedUp.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\appsettings.json" LogicalName="AMSpeedUp.Core.appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AMSpeedUp.Tests" />
+  </ItemGroup>
+
+</Project>
