@@ -13,6 +13,9 @@ internal static class WpfHost
 
     public static void Run(Action action) => UiDispatcher.Value.Invoke(action);
 
+    /// <summary>Runs async code on the UI thread, the way the app does, so awaits come back to the UI thread.</summary>
+    public static Task RunAsync(Func<Task> action) => UiDispatcher.Value.InvokeAsync(action).Task.Unwrap();
+
     private static Dispatcher Start()
     {
         Dispatcher? dispatcher = null;

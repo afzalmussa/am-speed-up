@@ -10,6 +10,7 @@ on:
     paths:
       - "src/AMSpeedUp.Core/VendorTools/**"
       - "src/AMSpeedUp.Windows/VendorTools/**"
+      - "src/AMSpeedUp.Windows/Platform/PowerShellRunner.cs"
       - ".github/workflows/vendor-tools-check.yml"
   schedule:
     - cron: "17 6 1 * *"

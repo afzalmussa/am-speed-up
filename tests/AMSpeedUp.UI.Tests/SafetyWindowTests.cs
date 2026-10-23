@@ -30,7 +30,7 @@ public class SafetyWindowTests
                 Assert.Contains(SafetyText.UndoNote(undo), texts);
             }
 
-            Assert.Contains("Uses McAfee's own removal tool.", texts);
+            Assert.Contains(texts, t => t.StartsWith("Uses McAfee's own removal tool.", StringComparison.Ordinal));
             Assert.Contains(SafetyText.PreviewRestorePointNotice, texts);
             Assert.Contains(SafetyText.PreviewBlockedHeading, texts);
             window.Close();
