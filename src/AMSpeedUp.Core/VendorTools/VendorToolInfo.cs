@@ -32,10 +32,10 @@ public sealed record VendorToolInfo
 /// <summary>
 /// The official McAfee and Norton removal tools.
 ///
-/// The download addresses below are the ones McAfee's and Norton's own community forums point to.
-/// They couldn't be checked against the vendors' current pages while this was written, so check
-/// them on a test PC. If an address is wrong or moves, nothing unsafe happens: the download or the
-/// signature check fails, nothing is run, and the vendor's help page opens instead.
+/// The "Check vendor removal tools" workflow downloads both tools and checks their signatures
+/// every month, so a moved or changed download shows up as a failed check. If an address does
+/// stop working, nothing unsafe happens: the download or the signature check fails, nothing is
+/// run, and the vendor's help page opens instead.
 /// </summary>
 public static class VendorToolCatalog
 {
