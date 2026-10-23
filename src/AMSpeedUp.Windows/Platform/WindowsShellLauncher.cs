@@ -47,6 +47,22 @@ public sealed class WindowsShellLauncher(IAppLog log) : IShellLauncher
         return Start(info, $"folder {path}");
     }
 
+    public bool OpenWindowsPage(WindowsPage page)
+    {
+        var info = page switch
+        {
+            WindowsPage.VirusProtection => new ProcessStartInfo("windowsdefender://threat") { UseShellExecute = true },
+            WindowsPage.SystemProtection => new ProcessStartInfo(
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "SystemPropertiesProtection.exe"))
+            {
+                UseShellExecute = false,
+            },
+            _ => throw new ArgumentOutOfRangeException(nameof(page), page, null),
+        };
+
+        return Start(info, page == WindowsPage.VirusProtection ? "Windows Security" : "System Protection settings");
+    }
+
     private bool Start(ProcessStartInfo info, string what)
     {
         try
