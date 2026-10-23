@@ -117,6 +117,43 @@ public class WindowSmokeTests
     }
 
     [Fact]
+    public async Task Remove_bloat_tab_renders_after_a_scan_and_a_removal()
+    {
+        // Build realistic state off the UI thread, then render it on the UI thread.
+        var inventory = new FakeInventory();
+        inventory.Apps.AddRange([
+            SampleData.Store("king.com.CandyCrushSaga", "Candy Crush Saga"),
+            SampleData.Store("king.com.CandyCrushSodaSaga", "Candy Crush Soda Saga"),
+            SampleData.Store("Microsoft.MicrosoftSolitaireCollection", "Solitaire"),
+            SampleData.Store("Microsoft.BingNews", "News"),
+            SampleData.Store("Microsoft.Getstarted", "Tips"),
+            SampleData.Desktop("McAfee LiveSafe", "McAfee, LLC"),
+            SampleData.Desktop("WildTangent Games", "WildTangent"),
+        ]);
+        var log = new FakeLog();
+        var undo = new MemoryUndo();
+        var runner = new AMSpeedUp.Core.Actions.ActionRunner(log, new FakeRestorePoints(), new FakeAntivirus(), new AlwaysContinuePrompts(), [new FakeRemover(inventory)], undo);
+        var removeBloat = new RemoveBloatViewModel(inventory, AMSpeedUp.Core.Presets.PresetLibrary.LoadEmbedded(log), runner,
+            new FakeDialogs { ConfirmAnswer = true }, new FakeShell(), undo, new FakeAfterRestart(), log, AppOptions.Default, () => false);
+
+        await removeBloat.ScanCommand.ExecuteAsync(null);
+        WpfHost.Run(() => Assert.True(Screenshots.HasContent(RenderTab(removeBloat, "remove-bloat-results"))));
+
+        removeBloat.Groups.SelectMany(g => g.Items).Single(i => i.Name == "WildTangent Games").IsSelected = false;
+        await removeBloat.RemoveSelectedCommand.ExecuteAsync(null);
+        WpfHost.Run(() => Assert.True(Screenshots.HasContent(RenderTab(removeBloat, "remove-bloat-after-removing"))));
+
+        static System.Windows.Media.Imaging.BitmapSource RenderTab(RemoveBloatViewModel vm, string name)
+        {
+            var viewModel = new MainViewModel(new FakeLog(), new FakeShell(), new FakeDialogs(), AppSettings.LoadEmbedded(), AppOptions.Default, vm);
+            var window = new MainWindow { DataContext = viewModel };
+            var bitmap = Screenshots.Render(window, name, 1040, 1400);
+            window.Close();
+            return bitmap;
+        }
+    }
+
+    [Fact]
     public void About_window_renders()
     {
         WpfHost.Run(() =>

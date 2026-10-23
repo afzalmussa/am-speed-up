@@ -32,7 +32,7 @@ jobs:
           "VERSION=$version" >> $env:GITHUB_ENV
 
       - name: Test
-        run: dotnet test AMSpeedUp.sln -c Release -p:Version=${{ env.VERSION }} --logger GitHubActions
+        run: dotnet test AMSpeedUp.sln -c Release -p:Version=${{ env.VERSION }} --logger GitHubActions --filter "Category!=VendorDownload"
 
       - name: Publish single-file app
         run: dotnet publish src/AMSpeedUp -c Release -p:Version=${{ env.VERSION }} -o publish

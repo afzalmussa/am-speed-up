@@ -8,6 +8,9 @@ public enum WindowsPage
 
     /// <summary>The "System Protection" tab where System Restore is turned on.</summary>
     SystemProtection,
+
+    /// <summary>System Restore itself, for winding the PC back to a restore point.</summary>
+    SystemRestore,
 }
 
 /// <summary>Opens web pages, files and folders with whatever Windows normally uses for them.</summary>
@@ -22,4 +25,7 @@ public interface IShellLauncher
     bool OpenFolder(string path);
 
     bool OpenWindowsPage(WindowsPage page);
+
+    /// <summary>Opens the Microsoft Store app, searching for an app by name, so it can be reinstalled.</summary>
+    bool OpenStoreSearch(string appName);
 }

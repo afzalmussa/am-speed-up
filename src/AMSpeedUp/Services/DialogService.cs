@@ -2,6 +2,7 @@ using System.Windows;
 using AMSpeedUp.Core.Actions;
 using AMSpeedUp.Core.Platform;
 using AMSpeedUp.Core.Safety;
+using AMSpeedUp.Core.VendorTools;
 using AMSpeedUp.ViewModels;
 using AMSpeedUp.Views;
 
@@ -38,6 +39,23 @@ public sealed class DialogService(IShellLauncher shell) : IDialogService
 
     public void ShowAntivirusWarning(AntivirusCheckResult result) =>
         ChoiceWindow.Show(Owner, AntivirusChoice(result, shell));
+
+    public bool ConfirmVendorTool(VendorToolInfo tool) =>
+        ChoiceWindow.Show(Owner, VendorToolChoice(tool)) == ChoiceResult.Primary;
+
+    public void ShowVendorToolProblem(VendorToolInfo tool, string reason) =>
+        ChoiceWindow.Show(Owner, VendorToolProblemChoice(tool, reason, shell));
+
+    public static Choice VendorToolChoice(VendorToolInfo tool) =>
+        new(VendorToolText.ReadyHeading(tool), VendorToolText.ReadyBody(tool),
+            PrimaryText: "Open the removal tool", SecondaryText: $"Skip {tool.VendorName}");
+
+    public static Choice VendorToolProblemChoice(VendorToolInfo tool, string reason, IShellLauncher shell) =>
+        new(VendorToolText.CannotRunHeading(tool), VendorToolText.CannotRunBody(tool) + $"\n\nDetails: {reason}",
+            PrimaryText: "Close",
+            ExtraText: $"Open {tool.VendorName}'s help page again",
+            ExtraAction: () => shell.OpenUrl(tool.HelpPage.ToString()),
+            IsWarning: true);
 
     /// <summary>
     /// Restore point problems. Where there's no restore point at all, Cancel is the main button so

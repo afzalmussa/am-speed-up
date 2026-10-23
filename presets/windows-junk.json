@@ -1,0 +1,332 @@
+{
+  "$schema": "./preset.schema.json",
+  "id": "windows-junk",
+  "name": "Windows junk apps",
+  "description": "Games, adverts and extra apps that came with Windows. Ticked ones are rarely used. Unticked ones are your choice.",
+  "tier": "free",
+  "items": [
+    {
+      "type": "store",
+      "match": "king.com.*",
+      "name": "Candy Crush and other King games",
+      "description": "Advertising games that come with Windows. They're free to download again if you want them.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "A278AB0D.*",
+      "name": "Gameloft games",
+      "description": "Advertising games, such as March of Empires, that come with Windows.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.MicrosoftSolitaireCollection",
+      "name": "Microsoft Solitaire Collection",
+      "description": "Card games including Solitaire and FreeCell. Keep it if you play them.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.Getstarted",
+      "name": "Tips",
+      "description": "Shows tips about Windows features. Most people never open it.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.WindowsFeedbackHub",
+      "name": "Feedback Hub",
+      "description": "Sends feedback about Windows to Microsoft. Most people never use it.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.MixedReality.Portal",
+      "name": "Mixed Reality Portal",
+      "description": "Only needed for virtual reality headsets.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.Microsoft3DViewer",
+      "name": "3D Viewer",
+      "description": "Opens 3D model files. Most people never use it.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.Print3D",
+      "name": "Print 3D",
+      "description": "Sends designs to a 3D printer. Only useful if you have one.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.MSPaint",
+      "name": "Paint 3D",
+      "description": "A 3D drawing app Microsoft no longer updates. The normal Paint app isn't affected.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.OneConnect",
+      "name": "Mobile Plans",
+      "description": "Sells mobile data plans for PCs with a SIM card slot.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.Messaging",
+      "name": "Microsoft Messaging",
+      "description": "An old messaging app Microsoft no longer supports.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.Wallet",
+      "name": "Microsoft Pay",
+      "description": "An old payments app Microsoft no longer supports.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.549981C3F5F10",
+      "name": "Cortana",
+      "description": "Microsoft's old voice assistant, which no longer works in most countries.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.BingFinance",
+      "name": "Money",
+      "description": "An old finance news app Microsoft no longer supports.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.BingSports",
+      "name": "Sports",
+      "description": "An old sports news app Microsoft no longer supports.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.PowerAutomateDesktop",
+      "name": "Power Automate",
+      "description": "A tool for automating office tasks. Most home users never use it.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.BingNews",
+      "name": "Microsoft News",
+      "description": "A news app. Keep it if you read the news with it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.BingWeather",
+      "name": "Weather",
+      "description": "A weather forecast app. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.WindowsMaps",
+      "name": "Maps",
+      "description": "A maps and directions app. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.MicrosoftOfficeHub",
+      "name": "Microsoft 365 (Office) app",
+      "description": "Advertises Microsoft 365. Your Word, Excel and other Office programs aren't affected.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.SkypeApp",
+      "name": "Skype",
+      "description": "Video calling app. Microsoft has replaced it with Teams. Keep it if you still use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.People",
+      "name": "People",
+      "description": "An address book app. Keep it if you use the Mail app.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.ZuneVideo",
+      "name": "Movies & TV",
+      "description": "Plays videos and films bought from Microsoft. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.ZuneMusic",
+      "name": "Media Player (Groove Music)",
+      "description": "Plays music and videos stored on your PC. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Clipchamp.Clipchamp",
+      "name": "Clipchamp",
+      "description": "A video editor. Keep it if you make videos.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.Todos",
+      "name": "Microsoft To Do",
+      "description": "A to-do list app. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "MicrosoftCorporationII.MicrosoftFamily",
+      "name": "Microsoft Family Safety",
+      "description": "Parental controls. Keep it if you use it to look after children's accounts.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.XboxApp",
+      "name": "Xbox Console Companion",
+      "description": "An old Xbox app. Keep it if you play Xbox games on this PC.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.GamingApp",
+      "name": "Xbox",
+      "description": "The Xbox app for PC games. Keep it if you play games from Xbox or Game Pass.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Microsoft.YourPhone",
+      "name": "Phone Link",
+      "description": "Connects your phone to your PC. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "SpotifyAB.SpotifyMusic",
+      "name": "Spotify",
+      "description": "Music streaming. Often comes with new PCs. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "4DF9E0F8.Netflix",
+      "name": "Netflix",
+      "description": "Often comes with new PCs. You can still watch Netflix in your web browser.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Disney.37853FC22B2CE",
+      "name": "Disney+",
+      "description": "Often comes with new PCs. You can still watch Disney+ in your web browser.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "AmazonVideo.PrimeVideo",
+      "name": "Prime Video",
+      "description": "Often comes with new PCs. You can still watch Prime Video in your web browser.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "BytedancePte.Ltd.TikTok",
+      "name": "TikTok",
+      "description": "Often comes with new PCs. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Facebook.*",
+      "name": "Facebook and Instagram",
+      "description": "Often come with new PCs. You can still use them in your web browser.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "9E2F88E3.Twitter",
+      "name": "X (Twitter)",
+      "description": "Often comes with new PCs. You can still use it in your web browser.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "PandoraMediaInc.*",
+      "name": "Pandora",
+      "description": "A music streaming advert that came with Windows.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "46928bounde.EclipseManager",
+      "name": "Eclipse Manager",
+      "description": "A note-taking advert that came with Windows.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "ActiproSoftwareLLC.*",
+      "name": "Code Writer",
+      "description": "A programming text editor advert that came with Windows.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "PricelinePartnerNetwork.Booking.com*",
+      "name": "Booking.com",
+      "description": "A travel booking advert that came with Windows.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "AdobeSystemsIncorporated.AdobePhotoshopExpress",
+      "name": "Adobe Photoshop Express",
+      "description": "A photo editing advert that came with Windows. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "D5EA27B7.Duolingo-LearnLanguagesforFree",
+      "name": "Duolingo",
+      "description": "A language learning advert that came with Windows. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "Flipboard.Flipboard",
+      "name": "Flipboard",
+      "description": "A news reading advert that came with Windows.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "ShazamEntertainmentLtd.Shazam",
+      "name": "Shazam",
+      "description": "A music recognition advert that came with Windows.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "WildTangent*",
+      "publisher": "WildTangent*",
+      "name": "WildTangent Games",
+      "description": "Trial games that came with your PC. They often show adverts and ask you to pay.",
+      "recommendation": "remove"
+    }
+  ]
+}

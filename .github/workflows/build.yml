@@ -34,7 +34,7 @@ jobs:
         # SCREENSHOT_DIR makes the UI tests save pictures of each window for review.
         env:
           SCREENSHOT_DIR: ${{ github.workspace }}/screenshots
-        run: dotnet test AMSpeedUp.sln -c Release --no-build --logger trx --logger GitHubActions --results-directory TestResults
+        run: dotnet test AMSpeedUp.sln -c Release --no-build --logger trx --logger GitHubActions --results-directory TestResults --filter "Category!=VendorDownload"
 
       - name: Upload test results
         if: always()

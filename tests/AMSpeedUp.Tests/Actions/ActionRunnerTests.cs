@@ -187,9 +187,35 @@ public class ActionRunnerTests
     }
 
     [Fact]
-    public async Task No_antivirus_check_if_removing_the_antivirus_failed()
+    public async Task If_removing_the_antivirus_failed_Defender_is_still_checked_and_the_antivirus_still_counts()
     {
         _executor.Behaviour = a => new ActionOutcome(a, OutcomeStatus.Failed, "uninstaller said no");
+        _antivirus.Snapshot = new AntivirusSnapshot(
+            new DefenderStatus(false, false, "Passive Mode"), null,
+            [new RegisteredAntivirus("McAfee LiveSafe", 397568)], null);
+
+        var report = await CreateRunner().RunAsync(Confirm(false, RemoveMcAfee));
+
+        Assert.Equal(AntivirusVerdict.OtherAntivirusOn, report.Antivirus!.Verdict);
+        Assert.Empty(_prompts.AntivirusWarnings);
+    }
+
+    [Fact]
+    public async Task If_a_failed_antivirus_removal_left_nothing_protecting_the_user_is_warned()
+    {
+        _executor.Behaviour = a => new ActionOutcome(a, OutcomeStatus.Failed, "half removed");
+        _antivirus.Snapshot = new AntivirusSnapshot(new DefenderStatus(true, false, "Normal"), null, [], null);
+
+        var report = await CreateRunner().RunAsync(Confirm(false, RemoveMcAfee));
+
+        Assert.Equal(AntivirusVerdict.Unprotected, report.Antivirus!.Verdict);
+        Assert.Single(_prompts.AntivirusWarnings);
+    }
+
+    [Fact]
+    public async Task No_antivirus_check_if_the_user_skipped_the_antivirus()
+    {
+        _executor.Behaviour = a => new ActionOutcome(a, OutcomeStatus.Skipped, "user said no");
 
         var report = await CreateRunner().RunAsync(Confirm(false, RemoveMcAfee));
 

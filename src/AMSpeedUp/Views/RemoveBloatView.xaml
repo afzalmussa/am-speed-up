@@ -1,0 +1,156 @@
+<UserControl x:Class="AMSpeedUp.Views.RemoveBloatView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AMSpeedUp.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:RemoveBloatViewModel}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,24" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Style="{StaticResource HeadingText}" Text="Remove unwanted programs" />
+            <TextBlock Style="{StaticResource BodyText}" Margin="0,10,0,20"
+                       Text="Find and remove programs you don't need, like games and trial software that came with your PC. You'll see exactly what will be removed before anything happens, and nothing is removed until you say yes." />
+
+            <!-- Before the first scan -->
+            <Border Style="{StaticResource Card}" Visibility="{Binding ShowStart, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource BodyText}"
+                               Text="Click the button to see which of these are on your PC. Looking doesn't change anything." />
+                    <Button Style="{StaticResource PrimaryButton}" Content="{Binding ScanButtonText}" Command="{Binding ScanCommand}"
+                            HorizontalAlignment="Left" Margin="0,16,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Working -->
+            <Border Style="{StaticResource Card}" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource BodyText}" Text="{Binding BusyText}" FontWeight="SemiBold" />
+                    <ProgressBar IsIndeterminate="True" Height="8" Margin="0,14,0,0" Foreground="{StaticResource MintBrush}"
+                                 Background="{StaticResource LightBrush}" BorderThickness="0"
+                                 AutomationProperties.Name="Working, please wait" />
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,12,0,0" FontSize="15"
+                               Text="Please don't turn off your PC. Windows may open other windows while this runs." />
+                </StackPanel>
+            </Border>
+
+            <!-- What happened last time -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16" BorderBrush="{StaticResource MintBrush}" BorderThickness="2"
+                    Visibility="{Binding HasSummary, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SubheadingText}" Text="What happened" />
+                    <ItemsControl ItemsSource="{Binding Summary}" Margin="0,8,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource BodyText}" Text="&#x2022;" />
+                                    <TextBlock Grid.Column="1" Style="{StaticResource BodyText}" Text="{Binding}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Nothing found -->
+            <Border Style="{StaticResource Card}" Visibility="{Binding ShowNothingFound, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SubheadingText}" Text="Good news" />
+                    <TextBlock Style="{StaticResource BodyText}" Margin="0,6,0,0"
+                               Text="None of the unwanted programs we look for are on this PC." />
+                    <Button Style="{StaticResource SecondaryButton}" Content="Scan again" Command="{Binding ScanCommand}"
+                            HorizontalAlignment="Left" Margin="0,16,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Results -->
+            <StackPanel Visibility="{Binding ShowResults, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock Style="{StaticResource BodyText}" FontWeight="SemiBold" Margin="0,0,0,4"
+                           Text="Ticked programs will be removed. Untick anything you want to keep." />
+
+                <ItemsControl ItemsSource="{Binding Groups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource SubheadingText}" Text="{Binding Name}" />
+                                        <Border Style="{StaticResource ProBadge}" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisibility}}">
+                                            <TextBlock Text="Pro" FontWeight="Bold" FontSize="14" Foreground="{StaticResource MintBrush}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Style="{StaticResource MutedText}" Text="{Binding Description}" Margin="0,4,0,6" />
+
+                                    <ItemsControl ItemsSource="{Binding Items}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Style="{StaticResource ChoiceCheckBox}" Margin="0,12,0,0"
+                                                          IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding CanChange}"
+                                                          AutomationProperties.Name="{Binding Name}">
+                                                    <StackPanel>
+                                                        <WrapPanel>
+                                                            <TextBlock Style="{StaticResource BodyText}" Text="{Binding Name}" FontWeight="SemiBold" />
+                                                            <Border Style="{StaticResource Pill}">
+                                                                <TextBlock Text="{Binding RecommendationText}" FontSize="13" Foreground="{StaticResource TextBrush}" />
+                                                            </Border>
+                                                        </WrapPanel>
+                                                        <TextBlock Style="{StaticResource MutedText}" Text="{Binding Description}" FontSize="15" />
+                                                    </StackPanel>
+                                                </CheckBox>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <WrapPanel Margin="0,20,0,0">
+                    <Button Style="{StaticResource PrimaryButton}" Content="{Binding RemoveButtonText}" Command="{Binding RemoveSelectedCommand}"
+                            Margin="0,0,12,8" />
+                    <Button Style="{StaticResource SecondaryButton}" Content="Scan again" Command="{Binding ScanCommand}" Margin="0,0,0,8" />
+                </WrapPanel>
+                <TextBlock Style="{StaticResource MutedText}" FontSize="15" Margin="0,4,0,0"
+                           Text="You'll see a full list of what will happen, and how to undo it, before anything is removed." />
+            </StackPanel>
+
+            <!-- Removed earlier -->
+            <StackPanel Margin="0,32,0,0" Visibility="{Binding HasHistory, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock Style="{StaticResource SubheadingText}" Text="Removed earlier" />
+                <TextBlock Style="{StaticResource MutedText}" Margin="0,4,0,8"
+                           Text="Changed your mind? Here's how to get each one back." />
+                <ItemsControl ItemsSource="{Binding History}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Margin="0,0,16,0">
+                                        <TextBlock Style="{StaticResource BodyText}" FontWeight="SemiBold" Text="{Binding Name}" />
+                                        <TextBlock Style="{StaticResource MutedText}" FontSize="15" Text="{Binding WhenText}" />
+                                        <TextBlock Style="{StaticResource MutedText}" FontSize="15" Text="{Binding UndoText}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Content="Reinstall" VerticalAlignment="Center"
+                                            Visibility="{Binding CanReinstall, Converter={StaticResource BoolToVisibility}}"
+                                            Command="{Binding DataContext.ReinstallCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" AutomationProperties.Name="{Binding Name, StringFormat=Reinstall {0}}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Style="{StaticResource SecondaryButton}" Content="Open System Restore" Command="{Binding OpenSystemRestoreCommand}"
+                        HorizontalAlignment="Left" Margin="0,16,0,0" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

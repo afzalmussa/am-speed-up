@@ -70,3 +70,22 @@ public class AppOptionsTests
         Assert.Equal(["--dry"], options.UnknownArguments);
     }
 }
+
+public class AppOptionsAntivirusCheckTests
+{
+    [Fact]
+    public void The_after_restart_antivirus_check_flag_is_recognised()
+    {
+        var options = AppOptions.Parse(["--check-antivirus"]);
+
+        Assert.True(options.CheckAntivirus);
+        Assert.False(options.DryRun);
+        Assert.Empty(options.UnknownArguments);
+    }
+
+    [Fact]
+    public void Normal_starts_do_not_check_antivirus()
+    {
+        Assert.False(AppOptions.Parse([]).CheckAntivirus);
+    }
+}

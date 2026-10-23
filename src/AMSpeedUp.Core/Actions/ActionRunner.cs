@@ -144,6 +144,7 @@ public sealed class ActionRunner
         }
 
         var outcomes = new List<ActionOutcome>();
+        var attemptedAntivirus = false;
         var removedAntivirus = new List<string>();
         for (var i = 0; i < plan.Actions.Count; i++)
         {
@@ -159,9 +160,15 @@ public sealed class ActionRunner
             var outcome = await RunOneAsync(action, dryRun, verb, cancellationToken).ConfigureAwait(false);
             outcomes.Add(outcome);
 
-            if ((outcome.Status is OutcomeStatus.Succeeded or OutcomeStatus.DryRun) && action is RemoveAppAction { IsAntivirus: true } removal)
+            if (action is RemoveAppAction { IsAntivirus: true } removal
+                && outcome.Status is OutcomeStatus.Succeeded or OutcomeStatus.Failed or OutcomeStatus.DryRun)
             {
-                removedAntivirus.Add(AntivirusBrand(removal));
+                // A failed removal may still have switched the antivirus off part-way, so check either way.
+                attemptedAntivirus = true;
+                if (outcome.Status == OutcomeStatus.Succeeded)
+                {
+                    removedAntivirus.Add(AntivirusBrand(removal));
+                }
             }
         }
 
@@ -169,10 +176,11 @@ public sealed class ActionRunner
 
         // Safety rule 4: never leave the PC without antivirus without saying so.
         AntivirusCheckResult? antivirus = null;
-        if (removedAntivirus.Count > 0)
+        if (attemptedAntivirus)
         {
-            // In a dry run the antivirus is still installed, so it still counts as protection.
-            antivirus = await CheckAntivirusAsync(dryRun ? [] : removedAntivirus, cancellationToken).ConfigureAwait(false);
+            // Only antivirus that was actually removed is ignored. One that's still installed
+            // (a dry run, or a removal that failed) still counts as protection if Windows says it's on.
+            antivirus = await CheckAntivirusAsync(removedAntivirus, cancellationToken).ConfigureAwait(false);
         }
 
         _log.Info($"Finished \"{plan.Title}\": {Summarise(outcomes)}.");
@@ -294,12 +302,7 @@ public sealed class ActionRunner
         return result;
     }
 
-    private static string AntivirusBrand(RemoveAppAction removal) => removal.VendorTool switch
-    {
-        VendorRemovalTool.McAfee => "McAfee",
-        VendorRemovalTool.Norton => "Norton",
-        _ => removal.App.Publisher ?? removal.App.DisplayName,
-    };
+    private static string AntivirusBrand(RemoveAppAction removal) => removal.VendorName;
 
     private static string Summarise(IReadOnlyList<ActionOutcome> outcomes) =>
         string.Join(", ", outcomes.GroupBy(o => o.Status).OrderBy(g => g.Key).Select(g => $"{g.Count()} {g.Key.ToString().ToLowerInvariant()}"));

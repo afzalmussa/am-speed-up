@@ -1,6 +1,8 @@
 using AMSpeedUp.Core.Configuration;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Platform;
+using AMSpeedUp.Core.Safety;
+using AMSpeedUp.Core.VendorTools;
 using AMSpeedUp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,15 +15,32 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly IShellLauncher _shell;
     private readonly IDialogService _dialogs;
     private readonly AppSettings _settings;
+    private readonly AppOptions _options;
+    private readonly IAntivirusStatusService? _antivirus;
+    private readonly IAntivirusCheckAfterRestart? _afterRestart;
 
-    public MainViewModel(IAppLog log, IShellLauncher shell, IDialogService dialogs, AppSettings settings, AppOptions options)
+    public MainViewModel(
+        IAppLog log,
+        IShellLauncher shell,
+        IDialogService dialogs,
+        AppSettings settings,
+        AppOptions options,
+        RemoveBloatViewModel? removeBloat = null,
+        IAntivirusStatusService? antivirus = null,
+        IAntivirusCheckAfterRestart? afterRestart = null)
     {
         _log = log;
         _shell = shell;
         _dialogs = dialogs;
         _settings = settings;
+        _options = options;
+        _antivirus = antivirus;
+        _afterRestart = afterRestart;
+        RemoveBloat = removeBloat;
         IsDryRun = options.DryRun;
     }
+
+    public RemoveBloatViewModel? RemoveBloat { get; }
 
     public string ProductName => AppInfo.ProductName;
 
@@ -82,6 +101,45 @@ public sealed partial class MainViewModel : ObservableObject
         _dialogs.ShowMessage(
             "Licence keys are coming soon",
             "You'll be able to enter a licence key here in a future version of AM Speed Up. Everything in the free version works without one.");
+
+    /// <summary>
+    /// Runs once the window is showing. After a removal tool restarted the PC, Windows opens the
+    /// app with --check-antivirus so Microsoft Defender can be checked (safety rule 4).
+    /// </summary>
+    public async Task RunStartupChecksAsync()
+    {
+        if (!_options.CheckAntivirus || _antivirus is null)
+        {
+            return;
+        }
+
+        _log.Info("Opened after a restart to check the antivirus.");
+        _afterRestart?.Cancel();
+
+        AntivirusCheckResult result;
+        try
+        {
+            var snapshot = await _antivirus.GetSnapshotAsync().ConfigureAwait(true);
+            // Only McAfee and Norton are removed with tools that restart the PC. Windows can keep
+            // listing them for a short while afterwards, so they don't count as protection here.
+            result = AntivirusCheck.Evaluate(snapshot, [VendorToolCatalog.McAfee.VendorName, VendorToolCatalog.Norton.VendorName]);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _log.Error("Couldn't check the antivirus after the restart.", ex);
+            result = new AntivirusCheckResult(AntivirusVerdict.Unknown);
+        }
+
+        _log.Write(result.NeedsWarning ? LogLevel.Warning : LogLevel.Info, $"Antivirus check after restart: {SafetyText.AntivirusSummary(result)}");
+        if (result.NeedsWarning)
+        {
+            _dialogs.ShowAntivirusWarning(result);
+        }
+        else
+        {
+            _dialogs.ShowMessage("Your PC is protected", SafetyText.AntivirusSummary(result));
+        }
+    }
 
     private void Open(string url, string description)
     {

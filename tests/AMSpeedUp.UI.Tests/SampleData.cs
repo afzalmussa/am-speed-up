@@ -22,6 +22,7 @@ internal static class SampleData
         Id = "uninstall-" + name,
         DisplayName = name,
         Publisher = publisher,
+        UninstallString = $"\"C:\\Program Files\\{name}\\uninstall.exe\"",
     };
 
     public static PlanPreview MixedPreview(bool dryRun = false)
@@ -45,7 +46,7 @@ internal static class SampleData
             new RemoveAppAction(Store("Microsoft.BingNews", "Microsoft News")),
             new RemoveAppAction(Desktop("McAfee LiveSafe", "McAfee, LLC"), mcafee),
             new RemoveAppAction(Desktop("WildTangent Games", "WildTangent")),
-            new SampleCleanupAction("Temporary files (1.2 GB)"),
+            new SampleCleanupAction("Temporary files"),
             new RemoveAppAction(Store("Microsoft.WindowsStore", "Microsoft Store")),
         ];
 

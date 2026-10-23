@@ -237,5 +237,7 @@ public class SafetyWindowTests
             Pages.Add(page);
             return true;
         }
+
+        public bool OpenStoreSearch(string appName) => true;
     }
 }

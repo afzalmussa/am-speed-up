@@ -1,5 +1,6 @@
 using AMSpeedUp.Core.Actions;
 using AMSpeedUp.Core.Safety;
+using AMSpeedUp.Core.VendorTools;
 
 namespace AMSpeedUp.Services;
 
@@ -17,4 +18,9 @@ public interface IDialogService
     bool AskContinueWithoutRestorePoint(RestorePointResult result);
 
     void ShowAntivirusWarning(AntivirusCheckResult result);
+
+    /// <summary>Explains the steps in a vendor's removal tool. Returns true if the user wants to go ahead.</summary>
+    bool ConfirmVendorTool(VendorToolInfo tool);
+
+    void ShowVendorToolProblem(VendorToolInfo tool, string reason);
 }
