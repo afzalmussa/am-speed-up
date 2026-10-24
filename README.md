@@ -80,6 +80,7 @@ dotnet test tests/AMSpeedUp.Tests
 | `tests/AMSpeedUp.UI.Tests` | xUnit tests for the app: view models, plus smoke tests that load every window. Windows only. With `SCREENSHOT_DIR` set, it also saves a picture of each window |
 | `tests/AMSpeedUp.Windows.Tests` | Integration tests that run real Windows PowerShell (read-only, nothing on the PC is changed). Windows only |
 | `presets` | The lists of apps the app can offer to remove. See [presets/README.md](presets/README.md) |
+| `data` | `startup-known.json`: plain descriptions and advice for common startup programs |
 | `assets` | Logo, icon and fonts |
 
 ### Releases

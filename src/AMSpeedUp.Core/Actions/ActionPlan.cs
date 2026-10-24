@@ -38,7 +38,7 @@ public sealed class ActionPlan
         var blocked = new List<BlockedAction>();
         foreach (var action in actions.Distinct())
         {
-            if (action is RemoveAppAction removal && ProtectedList.Check(removal.App) is { IsProtected: true } protection)
+            if (action.CheckProtection() is { IsProtected: true } protection)
             {
                 blocked.Add(new BlockedAction(action, protection.Reason!));
                 continue;

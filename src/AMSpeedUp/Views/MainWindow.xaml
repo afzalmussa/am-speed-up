@@ -64,16 +64,7 @@
             </TabItem>
 
             <TabItem Header="Startup" AutomationProperties.Name="Startup">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="32,24" MaxWidth="900" HorizontalAlignment="Left">
-                        <TextBlock Style="{StaticResource HeadingText}" Text="Choose what starts with your PC" />
-                        <TextBlock Style="{StaticResource BodyText}" Margin="0,10,0,20"
-                                   Text="Some programs start every time you turn on your PC, which can make it slow to get going. You can turn them off here, and turn them back on whenever you like." />
-                        <Border Style="{StaticResource Card}">
-                            <TextBlock Style="{StaticResource MutedText}" Text="This part of the app is still being built." />
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
+                <views:StartupView DataContext="{Binding Startup}" />
             </TabItem>
 
             <TabItem Header="Free up space" AutomationProperties.Name="Free up space">
