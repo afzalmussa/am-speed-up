@@ -63,6 +63,6 @@ public class ChangeStartupActionTests
         Assert.Equal(OutcomeStatus.Skipped, Assert.Single(report.Outcomes).Status);
         Assert.Empty(executor.Ran);
         Assert.True(log.Has(LogLevel.Warning, "protected list"));
-        Assert.Empty(calls.Calls.Where(c => c == "restore point"));
+        Assert.DoesNotContain("restore point", calls.Calls);
     }
 }

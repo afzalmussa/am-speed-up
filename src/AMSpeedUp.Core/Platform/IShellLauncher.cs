@@ -11,6 +11,9 @@ public enum WindowsPage
 
     /// <summary>System Restore itself, for winding the PC back to a restore point.</summary>
     SystemRestore,
+
+    /// <summary>The Recycle Bin in File Explorer, to look inside before emptying it.</summary>
+    RecycleBin,
 }
 
 /// <summary>Opens web pages, files and folders with whatever Windows normally uses for them.</summary>

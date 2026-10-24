@@ -91,7 +91,7 @@ public static class SafetyText
             "You can reinstall these later from AM Speed Up or the Microsoft Store.",
         Actions.UndoSupport.RestorePointOnly =>
             "AM Speed Up can't put these back. The only way to undo this is to use the restore point.",
-        _ => "Deleted files can't be brought back. They're only files that Windows doesn't need.",
+        _ => "These are deleted for good and can't be brought back.",
     };
 
     public static string FormatWhen(DateTimeOffset when) =>

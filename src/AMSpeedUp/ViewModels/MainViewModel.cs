@@ -28,7 +28,8 @@ public sealed partial class MainViewModel : ObservableObject
         RemoveBloatViewModel? removeBloat = null,
         IAntivirusStatusService? antivirus = null,
         IAntivirusCheckAfterRestart? afterRestart = null,
-        StartupViewModel? startup = null)
+        StartupViewModel? startup = null,
+        FreeSpaceViewModel? freeSpace = null)
     {
         _log = log;
         _shell = shell;
@@ -39,12 +40,15 @@ public sealed partial class MainViewModel : ObservableObject
         _afterRestart = afterRestart;
         RemoveBloat = removeBloat;
         Startup = startup;
+        FreeSpace = freeSpace;
         IsDryRun = options.DryRun;
     }
 
     public RemoveBloatViewModel? RemoveBloat { get; }
 
     public StartupViewModel? Startup { get; }
+
+    public FreeSpaceViewModel? FreeSpace { get; }
 
     public string ProductName => AppInfo.ProductName;
 
