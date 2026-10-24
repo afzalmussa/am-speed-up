@@ -34,6 +34,11 @@ public sealed class PowerShellRunner(IAppLog log) : IPowerShellRunner
             StandardOutputEncoding = Encoding.UTF8,
             StandardErrorEncoding = Encoding.UTF8,
         };
+        // If this app was started from PowerShell 7, PSModulePath points at PowerShell 7's modules,
+        // which Windows PowerShell can't load (Get-AuthenticodeSignature fails, for example).
+        // Without it, Windows PowerShell uses its own standard module folders.
+        info.Environment.Remove("PSModulePath");
+
         foreach (var argument in new[] { "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-OutputFormat", "Text", "-EncodedCommand", encoded })
         {
             info.ArgumentList.Add(argument);

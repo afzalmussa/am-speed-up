@@ -128,7 +128,7 @@ public class ActionPlanTests
         var entry = Apps.Entry(AppKind.DesktopProgram, "McAfee*", tool: VendorRemovalTool.McAfee);
         var action = new RemoveAppAction(Apps.Desktop("McAfee LiveSafe"), entry);
 
-        Assert.Equal("Uses McAfee's own removal tool.", action.Detail);
+        Assert.StartsWith("Uses McAfee's own removal tool.", action.Detail);
         Assert.True(action.IsAntivirus);
         Assert.Null(RemoveCandy.Detail);
     }
@@ -155,5 +155,60 @@ public class ActionPlanTests
 
         Assert.Equal(UndoKind.DesktopProgramRemoved, entry.Kind);
         Assert.False(entry.CanUndoInApp);
+    }
+}
+
+public class RemovalOrderAndDetailTests
+{
+    private static InstalledApp Desktop(string name, string? uninstall = null, string? quiet = null) => new()
+    {
+        Kind = AppKind.DesktopProgram,
+        Id = name,
+        DisplayName = name,
+        UninstallString = uninstall,
+        QuietUninstallString = quiet,
+    };
+
+    [Fact]
+    public void Removals_run_store_then_silent_then_interactive_then_antivirus_last()
+    {
+        var mcafeeEntry = Apps.Entry(AppKind.DesktopProgram, "McAfee*", tool: VendorRemovalTool.McAfee);
+        var mcafee = new RemoveAppAction(Desktop("McAfee LiveSafe"), mcafeeEntry);
+        var mcafeeStore = new RemoveAppAction(Apps.Store("5A894077.McAfeeSecurity", "McAfee Personal Security"), Apps.Entry(AppKind.StoreApp, "5A894077.McAfeeSecurity", antivirus: true));
+        var interactive = new RemoveAppAction(Desktop("Asks Questions", uninstall: "\"C:\\a\\uninstall.exe\""));
+        var silent = new RemoveAppAction(Desktop("Quiet One", quiet: "\"C:\\b\\u.exe\" /S"));
+        var store = new RemoveAppAction(Apps.Store("king.com.CandyCrushSaga", "Candy Crush Saga"));
+
+        var ordered = RemoveAppAction.InSafeOrder([mcafee, interactive, silent, mcafeeStore, store]);
+
+        Assert.Equal([store, silent, interactive, mcafeeStore, mcafee], ordered);
+    }
+
+    [Fact]
+    public void Interactive_uninstalls_warn_that_a_window_will_open()
+    {
+        var action = new RemoveAppAction(Desktop("Asks Questions", uninstall: "\"C:\\a\\uninstall.exe\""));
+
+        Assert.Equal("Its own uninstaller will open. Follow its steps to finish removing it.", action.Detail);
+    }
+
+    [Fact]
+    public void Silent_uninstalls_need_no_explanation()
+    {
+        Assert.Null(new RemoveAppAction(Desktop("Quiet One", quiet: "\"C:\\b\\u.exe\" /S")).Detail);
+    }
+
+    [Fact]
+    public void Programs_with_no_uninstaller_say_they_cannot_be_removed()
+    {
+        Assert.Contains("can't remove it", new RemoveAppAction(Desktop("Mystery")).Detail);
+    }
+
+    [Fact]
+    public void Store_apps_only_provisioned_for_new_users_say_so()
+    {
+        var app = Apps.Store("king.com.CandyCrushSaga") with { PackageFullNames = [], ProvisionedPackageName = "king.com.CandyCrushSaga_1.0.0.0_neutral_~_kgqvnymyfvs32" };
+
+        Assert.Contains("new user accounts", new RemoveAppAction(app).Detail);
     }
 }

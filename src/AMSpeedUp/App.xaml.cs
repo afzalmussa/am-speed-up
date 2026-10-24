@@ -1,11 +1,18 @@
 using System.Windows;
 using System.Windows.Threading;
+using AMSpeedUp.Core.Actions;
 using AMSpeedUp.Core.Configuration;
 using AMSpeedUp.Core.Logging;
+using AMSpeedUp.Core.Presets;
+using AMSpeedUp.Core.Undo;
 using AMSpeedUp.Services;
 using AMSpeedUp.ViewModels;
 using AMSpeedUp.Views;
+using AMSpeedUp.Windows.Inventory;
 using AMSpeedUp.Windows.Platform;
+using AMSpeedUp.Windows.Removal;
+using AMSpeedUp.Windows.Safety;
+using AMSpeedUp.Windows.VendorTools;
 
 namespace AMSpeedUp;
 
@@ -54,12 +61,64 @@ public partial class App : Application
         var settings = AppSettings.LoadEmbedded();
         var shell = new WindowsShellLauncher(_log);
         var dialogs = new DialogService(shell);
-        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options);
+        var powerShell = new PowerShellRunner(_log);
+        var antivirus = new WindowsAntivirusStatusService(powerShell, _log);
+        var afterRestart = new RunOnceAntivirusCheck(_log);
+        var undo = new FileUndoJournal(AppPaths.UndoHistory, _log);
+
+        IActionExecutor[] executors =
+        [
+            new StoreAppRemover(powerShell, _log),
+            new DesktopUninstaller(_log),
+            new VendorToolRemover(
+                new VendorToolDownloader(_log),
+                new AuthenticodeChecker(powerShell),
+                new UiVendorToolPrompts(dialogs, Dispatcher),
+                afterRestart,
+                shell,
+                _log),
+        ];
+        var runner = new ActionRunner(
+            _log,
+            new WindowsRestorePointService(powerShell, _log),
+            antivirus,
+            new UiSafetyPrompts(dialogs, Dispatcher),
+            executors,
+            undo);
+
+        // Licensing arrives in a later phase. Until then everyone is on the free version.
+        static bool IsPro() => false;
+
+        var removeBloat = new RemoveBloatViewModel(
+            new WindowsAppInventory(powerShell, _log),
+            PresetLibrary.LoadEmbedded(_log),
+            runner,
+            dialogs,
+            shell,
+            undo,
+            afterRestart,
+            _log,
+            options,
+            IsPro);
+
+        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart);
         dialogs.MainViewModel = viewModel;
 
         var window = new MainWindow { DataContext = viewModel };
         MainWindow = window;
         window.Show();
+
+        window.ContentRendered += async (_, _) =>
+        {
+            try
+            {
+                await viewModel.RunStartupChecksAsync();
+            }
+            catch (Exception ex)
+            {
+                _log.Error("The startup checks failed.", ex);
+            }
+        };
     }
 
     protected override void OnExit(ExitEventArgs e)

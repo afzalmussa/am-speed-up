@@ -117,6 +117,39 @@ public class WindowSmokeTests
     }
 
     [Fact]
+    public Task Remove_bloat_tab_renders_after_a_scan_and_a_removal() => WpfHost.RunAsync(async () =>
+    {
+        var inventory = new FakeInventory();
+        inventory.Apps.AddRange([
+            SampleData.Store("king.com.CandyCrushSaga", "Candy Crush Saga"),
+            SampleData.Store("king.com.CandyCrushSodaSaga", "Candy Crush Soda Saga"),
+            SampleData.Store("Microsoft.MicrosoftSolitaireCollection", "Solitaire"),
+            SampleData.Store("Microsoft.BingNews", "News"),
+            SampleData.Store("Microsoft.Getstarted", "Tips"),
+            SampleData.Desktop("McAfee LiveSafe", "McAfee, LLC"),
+            SampleData.Desktop("WildTangent Games", "WildTangent"),
+        ]);
+        var log = new FakeLog();
+        var undo = new MemoryUndo();
+        var runner = new AMSpeedUp.Core.Actions.ActionRunner(log, new FakeRestorePoints(), new FakeAntivirus(), new AlwaysContinuePrompts(), [new FakeRemover(inventory)], undo);
+        var removeBloat = new RemoveBloatViewModel(inventory, AMSpeedUp.Core.Presets.PresetLibrary.LoadEmbedded(log), runner,
+            new FakeDialogs { ConfirmAnswer = true }, new FakeShell(), undo, new FakeAfterRestart(), log, AppOptions.Default, () => false);
+        var window = new MainWindow
+        {
+            DataContext = new MainViewModel(new FakeLog(), new FakeShell(), new FakeDialogs(), AppSettings.LoadEmbedded(), AppOptions.Default, removeBloat),
+        };
+
+        await removeBloat.ScanCommand.ExecuteAsync(null);
+        Assert.True(Screenshots.HasContent(Screenshots.Render(window, "remove-bloat-results", 1040, 1400)));
+
+        removeBloat.Groups.SelectMany(g => g.Items).Single(i => i.Name == "WildTangent Games").IsSelected = false;
+        await removeBloat.RemoveSelectedCommand.ExecuteAsync(null);
+        Assert.True(Screenshots.HasContent(Screenshots.Render(window, "remove-bloat-after-removing", 1040, 1400)));
+
+        window.Close();
+    });
+
+    [Fact]
     public void About_window_renders()
     {
         WpfHost.Run(() =>

@@ -1,0 +1,74 @@
+{
+  "$schema": "./preset.schema.json",
+  "id": "trial-antivirus",
+  "name": "Trial antivirus",
+  "description": "Antivirus that came with your PC as a free trial and then asks you to pay. Windows has its own antivirus, Microsoft Defender, which switches on when these are removed.",
+  "tier": "free",
+  "items": [
+    {
+      "type": "desktop",
+      "match": "McAfee WebAdvisor*",
+      "publisher": "McAfee*",
+      "name": "McAfee WebAdvisor",
+      "description": "A McAfee browser add-on that came with your PC. It isn't an antivirus.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "McAfee Security Scan*",
+      "publisher": "McAfee*",
+      "name": "McAfee Security Scan Plus",
+      "description": "A McAfee scanner that mainly advertises McAfee's paid antivirus. It isn't an antivirus.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "McAfee*",
+      "publisher": "McAfee*",
+      "name": "McAfee antivirus",
+      "description": "Trial antivirus. Removed with McAfee's own removal tool. Microsoft Defender takes over.",
+      "recommendation": "remove",
+      "vendorTool": "mcafee"
+    },
+    {
+      "type": "store",
+      "match": "5A894077.McAfeeSecurity",
+      "name": "McAfee Personal Security",
+      "description": "The Microsoft Store version of McAfee's trial antivirus. Microsoft Defender takes over.",
+      "recommendation": "remove",
+      "antivirus": true
+    },
+    {
+      "type": "desktop",
+      "match": "Norton 360*",
+      "name": "Norton 360",
+      "description": "Trial antivirus. Removed with Norton's own removal tool. Microsoft Defender takes over.",
+      "recommendation": "remove",
+      "vendorTool": "norton"
+    },
+    {
+      "type": "desktop",
+      "match": "Norton Security*",
+      "name": "Norton Security",
+      "description": "Trial antivirus. Removed with Norton's own removal tool. Microsoft Defender takes over.",
+      "recommendation": "remove",
+      "vendorTool": "norton"
+    },
+    {
+      "type": "desktop",
+      "match": "Norton AntiVirus*",
+      "name": "Norton AntiVirus",
+      "description": "Trial antivirus. Removed with Norton's own removal tool. Microsoft Defender takes over.",
+      "recommendation": "remove",
+      "vendorTool": "norton"
+    },
+    {
+      "type": "desktop",
+      "match": "Norton Internet Security*",
+      "name": "Norton Internet Security",
+      "description": "Trial antivirus. Removed with Norton's own removal tool. Microsoft Defender takes over.",
+      "recommendation": "remove",
+      "vendorTool": "norton"
+    }
+  ]
+}

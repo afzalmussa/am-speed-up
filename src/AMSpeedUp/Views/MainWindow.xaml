@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:AMSpeedUp.ViewModels"
+        xmlns:views="clr-namespace:AMSpeedUp.Views"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         Title="AM Speed Up"
@@ -59,16 +60,7 @@
 
         <TabControl Grid.Row="2" Style="{StaticResource MainTabControl}" ItemContainerStyle="{StaticResource MainTabItem}">
             <TabItem Header="Remove bloat" AutomationProperties.Name="Remove bloat">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="32,24" MaxWidth="900" HorizontalAlignment="Left">
-                        <TextBlock Style="{StaticResource HeadingText}" Text="Remove unwanted programs" />
-                        <TextBlock Style="{StaticResource BodyText}" Margin="0,10,0,20"
-                                   Text="Find and remove programs you don't need, like games and trial software that came with your PC. You'll see exactly what will be removed before anything happens, and nothing is removed until you say yes." />
-                        <Border Style="{StaticResource Card}">
-                            <TextBlock Style="{StaticResource MutedText}" Text="This part of the app is still being built." />
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
+                <views:RemoveBloatView DataContext="{Binding RemoveBloat}" />
             </TabItem>
 
             <TabItem Header="Startup" AutomationProperties.Name="Startup">

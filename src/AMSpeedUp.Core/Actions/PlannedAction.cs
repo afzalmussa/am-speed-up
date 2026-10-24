@@ -41,13 +41,55 @@ public abstract record PlannedAction
 /// <summary>Remove a Store app or desktop program.</summary>
 public sealed record RemoveAppAction(InstalledApp App, PresetEntry? Entry = null) : PlannedAction
 {
+    /// <summary>
+    /// The order removals run in: Store apps, then silent removals, then ones the user clicks
+    /// through, and antivirus last. Antivirus tools often ask for a restart, so everything else is
+    /// finished first, and the PC keeps its antivirus for as long as possible.
+    /// </summary>
+    public static IReadOnlyList<RemoveAppAction> InSafeOrder(IEnumerable<RemoveAppAction> actions) =>
+        actions
+            .OrderBy(a => a.IsAntivirus)
+            .ThenBy(a => a.App.Kind == AppKind.StoreApp ? 0 : a.Method.Kind switch
+            {
+                UninstallKind.Silent => 1,
+                UninstallKind.Interactive => 2,
+                UninstallKind.VendorTool => 3,
+                _ => 4,
+            })
+            .ThenBy(a => a.App.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
     public override string Summary => $"Remove {App.DisplayName}";
 
-    public override string? Detail => VendorTool switch
+    public override string? Detail
     {
-        VendorRemovalTool.McAfee => "Uses McAfee's own removal tool.",
-        VendorRemovalTool.Norton => "Uses Norton's own removal tool.",
-        _ => null,
+        get
+        {
+            if (App.Kind == AppKind.StoreApp)
+            {
+                return App.PackageFullNames.Count == 0 && App.ProvisionedPackageName is not null
+                    ? "Stops it being added for new user accounts on this PC."
+                    : null;
+            }
+
+            return Method.Kind switch
+            {
+                UninstallKind.VendorTool => $"Uses {VendorName}'s own removal tool. It will open and ask you to click through a few steps.",
+                UninstallKind.Interactive => "Its own uninstaller will open. Follow its steps to finish removing it.",
+                UninstallKind.None => "Windows doesn't say how to remove this, so AM Speed Up can't remove it.",
+                _ => null,
+            };
+        }
+    }
+
+    /// <summary>How a desktop program will be removed. Store apps don't use this.</summary>
+    public UninstallMethod Method => UninstallMethods.Choose(App, VendorTool);
+
+    public string VendorName => VendorTool switch
+    {
+        VendorRemovalTool.McAfee => "McAfee",
+        VendorRemovalTool.Norton => "Norton",
+        _ => App.Publisher ?? App.DisplayName,
     };
 
     public override UndoSupport Undo =>

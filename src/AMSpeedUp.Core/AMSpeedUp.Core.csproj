@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Configuration\appsettings.json" LogicalName="AMSpeedUp.Core.appsettings.json" />
+    <!-- The presets ship inside the app, so what's in the repo is exactly what the app removes. -->
+    <EmbeddedResource Include="..\..\presets\*.json" Exclude="..\..\presets\preset.schema.json"
+                      LogicalName="AMSpeedUp.Core.Presets.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

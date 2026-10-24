@@ -1,6 +1,7 @@
 using AMSpeedUp.Core.Actions;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Safety;
+using AMSpeedUp.Core.VendorTools;
 using AMSpeedUp.Core.Platform;
 using AMSpeedUp.Services;
 
@@ -52,6 +53,14 @@ internal sealed class FakeShell : IShellLauncher
         OpenedPages.Add(page);
         return true;
     }
+
+    public List<string> StoreSearches { get; } = [];
+
+    public bool OpenStoreSearch(string appName)
+    {
+        StoreSearches.Add(appName);
+        return true;
+    }
 }
 
 internal sealed class FakeDialogs : IDialogService
@@ -86,4 +95,18 @@ internal sealed class FakeDialogs : IDialogService
     public List<AntivirusCheckResult> AntivirusWarnings { get; } = [];
 
     public void ShowAntivirusWarning(AntivirusCheckResult result) => AntivirusWarnings.Add(result);
+
+    public bool VendorToolAnswer { get; set; } = true;
+
+    public List<VendorToolInfo> VendorToolQuestions { get; } = [];
+
+    public bool ConfirmVendorTool(VendorToolInfo tool)
+    {
+        VendorToolQuestions.Add(tool);
+        return VendorToolAnswer;
+    }
+
+    public List<(VendorToolInfo Tool, string Reason)> VendorToolProblems { get; } = [];
+
+    public void ShowVendorToolProblem(VendorToolInfo tool, string reason) => VendorToolProblems.Add((tool, reason));
 }

@@ -1,0 +1,33 @@
+name: Check vendor removal tools
+
+# Downloads McAfee's and Norton's official removal tools and checks they're validly signed by
+# the vendor. Nothing is run. Use it to confirm the download addresses still work: run it by
+# hand from the Actions tab. It also runs on the 1st of each month and whenever the
+# removal tool code changes.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "src/AMSpeedUp.Core/VendorTools/**"
+      - "src/AMSpeedUp.Windows/VendorTools/**"
+      - "src/AMSpeedUp.Windows/Platform/PowerShellRunner.cs"
+      - ".github/workflows/vendor-tools-check.yml"
+  schedule:
+    - cron: "17 6 1 * *"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Download and check signatures
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Download and check
+        run: dotnet test tests/AMSpeedUp.Windows.Tests -c Release --filter "Category=VendorDownload" --logger GitHubActions --logger "console;verbosity=normal"

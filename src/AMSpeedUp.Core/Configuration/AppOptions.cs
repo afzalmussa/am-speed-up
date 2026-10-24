@@ -8,11 +8,17 @@ public sealed record AppOptions(bool DryRun, IReadOnlyList<string> UnknownArgume
 {
     public const string DryRunFlag = "--dry-run";
 
+    /// <summary>Used once after a removal tool restarts the PC, to check Microsoft Defender is on.</summary>
+    public const string CheckAntivirusFlag = "--check-antivirus";
+
     public static AppOptions Default { get; } = new(false, []);
+
+    public bool CheckAntivirus { get; init; }
 
     public static AppOptions Parse(IEnumerable<string>? args)
     {
         var dryRun = false;
+        var checkAntivirus = false;
         var unknown = new List<string>();
 
         foreach (var raw in args ?? [])
@@ -33,12 +39,15 @@ public sealed record AppOptions(bool DryRun, IReadOnlyList<string> UnknownArgume
                 case "/dryrun":
                     dryRun = true;
                     break;
+                case CheckAntivirusFlag:
+                    checkAntivirus = true;
+                    break;
                 default:
                     unknown.Add(arg);
                     break;
             }
         }
 
-        return new AppOptions(dryRun, unknown);
+        return new AppOptions(dryRun, unknown) { CheckAntivirus = checkAntivirus };
     }
 }

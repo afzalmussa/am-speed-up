@@ -7,6 +7,12 @@ namespace AMSpeedUp.Core.Presets;
 /// <summary>One installed item that a preset suggests doing something about.</summary>
 public sealed record MatchedApp(InstalledApp App, PresetEntry Entry, Recommendation Recommendation, bool IsLocked)
 {
+    /// <summary>
+    /// The preset's friendly name when the entry is for one specific app. When an entry covers
+    /// several apps (a wildcard), each app's own name, so they can be told apart.
+    /// </summary>
+    public string DisplayName => Matching.WildcardPattern.HasWildcards(Entry.Match) ? App.DisplayName : Entry.Name;
+
     /// <summary>Only "remove" items start ticked, and never ones the user hasn't unlocked.</summary>
     public bool IsTickedByDefault => Recommendation == Recommendation.Remove && !IsLocked;
 }
@@ -75,7 +81,7 @@ public static class PresetMatcher
 
             if (items.Count > 0)
             {
-                items.Sort((a, b) => StringComparer.CurrentCultureIgnoreCase.Compare(a.Entry.Name, b.Entry.Name));
+                items.Sort((a, b) => StringComparer.CurrentCultureIgnoreCase.Compare(a.DisplayName, b.DisplayName));
                 groups.Add(new PresetGroup(preset, locked, items));
             }
         }

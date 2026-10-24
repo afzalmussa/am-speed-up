@@ -57,10 +57,26 @@ public sealed class WindowsShellLauncher(IAppLog log) : IShellLauncher
             {
                 UseShellExecute = false,
             },
+            WindowsPage.SystemRestore => new ProcessStartInfo(
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "rstrui.exe"))
+            {
+                UseShellExecute = false,
+            },
             _ => throw new ArgumentOutOfRangeException(nameof(page), page, null),
         };
 
-        return Start(info, page == WindowsPage.VirusProtection ? "Windows Security" : "System Protection settings");
+        return Start(info, page switch
+        {
+            WindowsPage.VirusProtection => "Windows Security",
+            WindowsPage.SystemProtection => "System Protection settings",
+            _ => "System Restore",
+        });
+    }
+
+    public bool OpenStoreSearch(string appName)
+    {
+        var uri = "ms-windows-store://search/?query=" + Uri.EscapeDataString(appName.Trim());
+        return Start(new ProcessStartInfo(uri) { UseShellExecute = true }, $"the Microsoft Store search for {appName}");
     }
 
     private bool Start(ProcessStartInfo info, string what)

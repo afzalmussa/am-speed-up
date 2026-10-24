@@ -44,7 +44,11 @@ public sealed record InstalledApp
 
     public string? PackageFamilyName { get; init; }
 
-    public string? PackageFullName { get; init; }
+    /// <summary>Every installed copy for this user. There can be more than one, for example x64 and x86.</summary>
+    public IReadOnlyList<string> PackageFullNames { get; init; } = [];
+
+    /// <summary>The copy Windows keeps to install for new user accounts, if there is one.</summary>
+    public string? ProvisionedPackageName { get; init; }
 
     public PackageSignatureKind SignatureKind { get; init; } = PackageSignatureKind.Unknown;
 
@@ -58,6 +62,14 @@ public sealed record InstalledApp
 
     /// <summary>Windows hides this entry from "Installed apps" because it's part of something bigger.</summary>
     public bool IsSystemComponent { get; init; }
+
+    public string? DisplayVersion { get; init; }
+
+    /// <summary>Where the program's uninstall details are, for example HKLM\SOFTWARE\...\Uninstall\{GUID}.</summary>
+    public string? RegistryKeyPath { get; init; }
+
+    /// <summary>Installed with Windows Installer (an .msi), so it can be removed silently with msiexec.</summary>
+    public string? MsiProductCode { get; init; }
 
     public string? UninstallString { get; init; }
 
