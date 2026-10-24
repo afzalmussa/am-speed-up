@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Threading;
 using AMSpeedUp.Core.Actions;
+using AMSpeedUp.Core.Cleanup;
 using AMSpeedUp.Core.Configuration;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Presets;
@@ -9,6 +10,7 @@ using AMSpeedUp.Core.Undo;
 using AMSpeedUp.Services;
 using AMSpeedUp.ViewModels;
 using AMSpeedUp.Views;
+using AMSpeedUp.Windows.Cleanup;
 using AMSpeedUp.Windows.Inventory;
 using AMSpeedUp.Windows.Platform;
 using AMSpeedUp.Windows.Removal;
@@ -67,11 +69,14 @@ public partial class App : Application
         var antivirus = new WindowsAntivirusStatusService(powerShell, _log);
         var afterRestart = new RunOnceAntivirusCheck(_log);
         var undo = new FileUndoJournal(AppPaths.UndoHistory, _log);
+        var runningPrograms = new WindowsRunningPrograms();
+        var activity = new ActivityStatus();
 
         IActionExecutor[] executors =
         [
             new StoreAppRemover(powerShell, _log),
             new StartupItemChanger(powerShell, _log),
+            new CleanupExecutor(runningPrograms, activity, _log),
             new DesktopUninstaller(_log),
             new VendorToolRemover(
                 new VendorToolDownloader(_log),
@@ -112,7 +117,16 @@ public partial class App : Application
             _log,
             options);
 
-        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart, startup);
+        var freeSpace = new FreeSpaceViewModel(
+            new WindowsCleanupScanner(runningPrograms, _log),
+            runner,
+            activity,
+            dialogs,
+            shell,
+            _log,
+            options);
+
+        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart, startup, freeSpace);
         dialogs.MainViewModel = viewModel;
 
         var window = new MainWindow { DataContext = viewModel };

@@ -62,6 +62,7 @@ public sealed class WindowsShellLauncher(IAppLog log) : IShellLauncher
             {
                 UseShellExecute = false,
             },
+            WindowsPage.RecycleBin => RecycleBinInfo(),
             _ => throw new ArgumentOutOfRangeException(nameof(page), page, null),
         };
 
@@ -69,8 +70,16 @@ public sealed class WindowsShellLauncher(IAppLog log) : IShellLauncher
         {
             WindowsPage.VirusProtection => "Windows Security",
             WindowsPage.SystemProtection => "System Protection settings",
+            WindowsPage.RecycleBin => "the Recycle Bin",
             _ => "System Restore",
         });
+    }
+
+    private static ProcessStartInfo RecycleBinInfo()
+    {
+        var info = new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe")) { UseShellExecute = false };
+        info.ArgumentList.Add("shell:RecycleBinFolder");
+        return info;
     }
 
     public bool OpenStoreSearch(string appName)
