@@ -284,4 +284,38 @@
         <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
 
+    <!-- An on/off switch. Mint and to the right when on, grey and to the left when off. -->
+    <Style x:Key="Switch" TargetType="CheckBox">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusOutline}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border x:Name="Track" Width="56" Height="30" CornerRadius="15" Background="{StaticResource DisabledBackgroundBrush}"
+                            BorderBrush="{StaticResource MutedTextBrush}" BorderThickness="1" SnapsToDevicePixels="True">
+                        <Border x:Name="Knob" Width="22" Height="22" CornerRadius="11" Background="{StaticResource SurfaceBrush}"
+                                BorderBrush="{StaticResource MutedTextBrush}" BorderThickness="1"
+                                HorizontalAlignment="Left" Margin="3,0,0,0" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Track" Property="Background" Value="{StaticResource MintBrush}" />
+                            <Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource DarkBrush}" />
+                            <Setter TargetName="Knob" Property="HorizontalAlignment" Value="Right" />
+                            <Setter TargetName="Knob" Property="Margin" Value="0,0,3,0" />
+                            <Setter TargetName="Knob" Property="BorderBrush" Value="{StaticResource DarkBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource LinkBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

@@ -1,0 +1,167 @@
+{
+  "$comment": "Plain descriptions for common programs that start with Windows. 'match' is a wildcard for the item's name, 'file' for its program file name. recommendation: turn-off, optional or keep-on. Anything not listed is shown as 'Not sure what this is? Leave it on.'",
+  "items": [
+    {
+      "match": "SecurityHealth*",
+      "name": "Windows Security",
+      "description": "Shows the Windows Security icon and its warnings. Leave it on.",
+      "recommendation": "keep-on"
+    },
+    {
+      "file": "RtkAudUService64.exe",
+      "name": "Realtek audio",
+      "description": "Part of your PC's sound driver. Leave it on.",
+      "recommendation": "keep-on"
+    },
+    {
+      "file": "OneDrive.exe",
+      "name": "Microsoft OneDrive",
+      "description": "Keeps your files backed up to OneDrive. Leave it on if you use OneDrive.",
+      "recommendation": "optional"
+    },
+    {
+      "file": "ms-teams.exe",
+      "name": "Microsoft Teams",
+      "description": "Opens Teams when your PC starts. Turn it off if you don't use Teams every day.",
+      "recommendation": "optional"
+    },
+    {
+      "file": "Teams.exe",
+      "name": "Microsoft Teams",
+      "description": "Opens Teams when your PC starts. Turn it off if you don't use Teams every day.",
+      "recommendation": "optional"
+    },
+    {
+      "match": "MicrosoftEdgeAutoLaunch_*",
+      "name": "Microsoft Edge (in the background)",
+      "description": "Loads Edge in the background when your PC starts. Edge still opens normally when you need it.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "Spotify.exe",
+      "name": "Spotify",
+      "description": "Opens Spotify when your PC starts. You can still open it yourself when you want music.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "steam.exe",
+      "name": "Steam",
+      "description": "Opens the Steam games store when your PC starts. You can open it yourself when you want to play.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "EpicGamesLauncher.exe",
+      "name": "Epic Games Launcher",
+      "description": "Opens the Epic games store when your PC starts. You can open it yourself when you want to play.",
+      "recommendation": "turn-off"
+    },
+    {
+      "match": "Discord",
+      "name": "Discord",
+      "description": "Opens the Discord chat app when your PC starts. You can open it yourself when you need it.",
+      "recommendation": "turn-off"
+    },
+    {
+      "match": "Skype*",
+      "name": "Skype",
+      "description": "Opens Skype when your PC starts. You can open it yourself when you want to make a call.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "Zoom.exe",
+      "name": "Zoom",
+      "description": "Opens Zoom when your PC starts. Zoom still opens when you click a meeting link.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "Telegram.exe",
+      "name": "Telegram",
+      "description": "Opens the Telegram chat app when your PC starts. You can open it yourself when you need it.",
+      "recommendation": "turn-off"
+    },
+    {
+      "match": "iTunesHelper",
+      "name": "iTunes Helper",
+      "description": "Opens iTunes when you plug in an iPhone or iPod. Turn it off if you don't use iTunes.",
+      "recommendation": "turn-off"
+    },
+    {
+      "match": "AdobeAAMUpdater*",
+      "name": "Adobe updater (old)",
+      "description": "An old Adobe update checker. Adobe's current apps check for updates themselves.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "AdobeCollabSync.exe",
+      "name": "Adobe Acrobat sync",
+      "description": "Syncs Adobe Acrobat documents online. Turn it off if you only use Acrobat to read PDFs.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "Creative Cloud.exe",
+      "name": "Adobe Creative Cloud",
+      "description": "Keeps Adobe apps like Photoshop up to date. Leave it on if you use them.",
+      "recommendation": "optional"
+    },
+    {
+      "file": "jusched.exe",
+      "name": "Java update checker",
+      "description": "Checks for Java updates. Only needed if you use programs that need Java.",
+      "recommendation": "optional"
+    },
+    {
+      "file": "Dropbox.exe",
+      "name": "Dropbox",
+      "description": "Keeps your files backed up to Dropbox. Leave it on if you use Dropbox.",
+      "recommendation": "optional"
+    },
+    {
+      "file": "GoogleDriveFS.exe",
+      "name": "Google Drive",
+      "description": "Keeps your files backed up to Google Drive. Leave it on if you use Google Drive.",
+      "recommendation": "optional"
+    },
+    {
+      "match": "Opera Browser Assistant*",
+      "name": "Opera Browser Assistant",
+      "description": "Advertises the Opera web browser. Your browser works fine without it.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "CCleaner*.exe",
+      "name": "CCleaner",
+      "description": "Watches your PC in the background and shows adverts for CCleaner's paid version.",
+      "recommendation": "turn-off"
+    },
+    {
+      "file": "uTorrent.exe",
+      "name": "uTorrent",
+      "description": "Opens the uTorrent download program when your PC starts. You can open it yourself when you need it.",
+      "recommendation": "turn-off"
+    },
+    {
+      "match": "Send to OneNote*",
+      "name": "Send to OneNote",
+      "description": "Adds a OneNote printing helper. Most people never use it.",
+      "recommendation": "turn-off"
+    },
+    {
+      "match": "Logi*",
+      "name": "Logitech software",
+      "description": "Makes the extra buttons on Logitech mice and keyboards work. Leave it on if you use them.",
+      "recommendation": "optional"
+    },
+    {
+      "match": "MicrosoftEdgeUpdate*",
+      "name": "Microsoft Edge updates",
+      "description": "Keeps Microsoft Edge up to date with security fixes. Leave it on.",
+      "recommendation": "keep-on"
+    },
+    {
+      "match": "GoogleUpdate*",
+      "name": "Google Chrome updates",
+      "description": "Keeps Google Chrome up to date with security fixes. Leave it on.",
+      "recommendation": "keep-on"
+    }
+  ]
+}

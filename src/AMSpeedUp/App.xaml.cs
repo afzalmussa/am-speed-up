@@ -4,6 +4,7 @@ using AMSpeedUp.Core.Actions;
 using AMSpeedUp.Core.Configuration;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Presets;
+using AMSpeedUp.Core.Startup;
 using AMSpeedUp.Core.Undo;
 using AMSpeedUp.Services;
 using AMSpeedUp.ViewModels;
@@ -12,6 +13,7 @@ using AMSpeedUp.Windows.Inventory;
 using AMSpeedUp.Windows.Platform;
 using AMSpeedUp.Windows.Removal;
 using AMSpeedUp.Windows.Safety;
+using AMSpeedUp.Windows.Startup;
 using AMSpeedUp.Windows.VendorTools;
 
 namespace AMSpeedUp;
@@ -69,6 +71,7 @@ public partial class App : Application
         IActionExecutor[] executors =
         [
             new StoreAppRemover(powerShell, _log),
+            new StartupItemChanger(powerShell, _log),
             new DesktopUninstaller(_log),
             new VendorToolRemover(
                 new VendorToolDownloader(_log),
@@ -101,7 +104,15 @@ public partial class App : Application
             options,
             IsPro);
 
-        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart);
+        var startup = new StartupViewModel(
+            new WindowsStartupInventory(powerShell, _log),
+            KnownStartupItems.LoadEmbedded(_log),
+            runner,
+            dialogs,
+            _log,
+            options);
+
+        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart, startup);
         dialogs.MainViewModel = viewModel;
 
         var window = new MainWindow { DataContext = viewModel };

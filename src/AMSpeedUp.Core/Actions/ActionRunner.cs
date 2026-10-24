@@ -190,9 +190,9 @@ public sealed class ActionRunner
     private async Task<ActionOutcome> RunOneAsync(PlannedAction action, bool dryRun, string verb, CancellationToken cancellationToken)
     {
         // Safety rule 3: checked again here, right before the change, whatever built the plan.
-        if (action is RemoveAppAction removal && ProtectedList.Check(removal.App) is { IsProtected: true } protection)
+        if (action.CheckProtection() is { IsProtected: true } protection)
         {
-            _log.Warning($"Skipped {removal.App.DisplayName}: it's on the protected list. {protection.Reason}");
+            _log.Warning($"Skipped \"{action.Summary}\": it's on the protected list. {protection.Reason}");
             return new ActionOutcome(action, OutcomeStatus.Skipped, protection.Reason!);
         }
 

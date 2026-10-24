@@ -1,5 +1,6 @@
 using AMSpeedUp.Core.Inventory;
 using AMSpeedUp.Core.Presets;
+using AMSpeedUp.Core.Safety;
 using AMSpeedUp.Core.Undo;
 
 namespace AMSpeedUp.Core.Actions;
@@ -36,6 +37,12 @@ public abstract record PlannedAction
 
     /// <summary>What to record so the change can be undone or explained later. Null if nothing needs recording.</summary>
     public virtual UndoEntry? CreateUndoEntry(DateTimeOffset when) => null;
+
+    /// <summary>
+    /// Whether this change touches something that must never be changed. Checked when the plan is
+    /// made and again by the runner right before the change. Uses only hard-coded lists.
+    /// </summary>
+    public virtual ProtectionResult CheckProtection() => ProtectionResult.NotProtected;
 }
 
 /// <summary>Remove a Store app or desktop program.</summary>
@@ -99,6 +106,8 @@ public sealed record RemoveAppAction(InstalledApp App, PresetEntry? Entry = null
     public bool IsAntivirus => Entry?.IsAntivirus ?? false;
 
     public VendorRemovalTool VendorTool => Entry?.VendorTool ?? VendorRemovalTool.None;
+
+    public override ProtectionResult CheckProtection() => ProtectedList.Check(App);
 
     public override UndoEntry CreateUndoEntry(DateTimeOffset when)
     {
