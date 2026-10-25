@@ -42,6 +42,9 @@
                         <TextBlock Text="{Binding LicenceStatusText}" Foreground="{StaticResource MintBrush}"
                                    FontWeight="SemiBold" FontSize="15" />
                     </Border>
+                    <Button Content="Get Pro" Style="{StaticResource PrimaryButton}"
+                            Command="{Binding GetProCommand}" Margin="0,4,10,4"
+                            Visibility="{Binding CanGetPro, Converter={StaticResource BoolToVisibility}}" />
                     <Button Content="Enter licence key" Style="{StaticResource HeaderButton}"
                             Command="{Binding EnterLicenceKeyCommand}" Margin="0,4,10,4" />
                     <Button Content="About" Style="{StaticResource HeaderButton}"

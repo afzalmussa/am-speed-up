@@ -3,6 +3,7 @@ using System.Windows.Threading;
 using AMSpeedUp.Core.Actions;
 using AMSpeedUp.Core.Cleanup;
 using AMSpeedUp.Core.Configuration;
+using AMSpeedUp.Core.Licensing;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Presets;
 using AMSpeedUp.Core.Startup;
@@ -12,6 +13,7 @@ using AMSpeedUp.ViewModels;
 using AMSpeedUp.Views;
 using AMSpeedUp.Windows.Cleanup;
 using AMSpeedUp.Windows.Inventory;
+using AMSpeedUp.Windows.Licensing;
 using AMSpeedUp.Windows.Platform;
 using AMSpeedUp.Windows.Removal;
 using AMSpeedUp.Windows.Safety;
@@ -94,8 +96,13 @@ public partial class App : Application
             executors,
             undo);
 
-        // Licensing arrives in a later phase. Until then everyone is on the free version.
-        static bool IsPro() => false;
+        var licence = new LicenceManager(
+            new LemonSqueezyLicenceService(LemonSqueezyLicenceService.CreateHttpClient(), settings.LemonSqueezy ?? new LemonSqueezySettings()),
+            new DpapiLicenceStore(AppPaths.Licence),
+            _log,
+            DeveloperMode.IsOn());
+        _log.Info($"Licence: {licence.Current.State}.");
+        bool IsPro() => licence.Current.IsPro;
 
         var removeBloat = new RemoveBloatViewModel(
             new WindowsAppInventory(powerShell, _log),
@@ -126,8 +133,9 @@ public partial class App : Application
             _log,
             options);
 
-        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart, startup, freeSpace);
+        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart, startup, freeSpace, licence);
         dialogs.MainViewModel = viewModel;
+        dialogs.LicenceViewModel = new LicenceViewModel(licence, dialogs, shell, settings);
 
         var window = new MainWindow { DataContext = viewModel };
         MainWindow = window;

@@ -45,7 +45,7 @@ public class PresetMatcherTests
     }
 
     [Fact]
-    public void Pro_presets_unlock_with_Pro()
+    public void Pro_presets_open_up_with_Pro()
     {
         var presets = new[] { Apps.Preset("hp", PresetTier.Pro, Apps.Entry(AppKind.DesktopProgram, "HP Support*", Recommendation.Remove)) };
 

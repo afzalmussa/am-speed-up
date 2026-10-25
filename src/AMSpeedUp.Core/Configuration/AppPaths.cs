@@ -9,4 +9,6 @@ public static class AppPaths
     public static string Logs => Path.Combine(DataRoot, "logs");
 
     public static string UndoHistory => Path.Combine(DataRoot, "undo-history.json");
+
+    public static string Licence => Path.Combine(DataRoot, "licence.dat");
 }

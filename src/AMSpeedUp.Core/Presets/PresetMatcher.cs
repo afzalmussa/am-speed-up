@@ -13,7 +13,7 @@ public sealed record MatchedApp(InstalledApp App, PresetEntry Entry, Recommendat
     /// </summary>
     public string DisplayName => Matching.WildcardPattern.HasWildcards(Entry.Match) ? App.DisplayName : Entry.Name;
 
-    /// <summary>Only "remove" items start ticked, and never ones the user hasn't unlocked.</summary>
+    /// <summary>Only "remove" items start ticked, and never Pro items on the free version.</summary>
     public bool IsTickedByDefault => Recommendation == Recommendation.Remove && !IsLocked;
 }
 

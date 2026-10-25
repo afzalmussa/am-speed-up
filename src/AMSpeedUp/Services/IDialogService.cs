@@ -11,6 +11,11 @@ public interface IDialogService
 
     void ShowAbout();
 
+    void ShowLicence();
+
+    /// <summary>A yes/no question. The "no" button is the main one, so pressing Enter is the safe choice.</summary>
+    bool Confirm(string heading, string body, string yesText, string noText);
+
     /// <summary>Shows the preview checklist. Returns true only if the user clicked the confirm button.</summary>
     bool ConfirmPlan(PlanPreview preview);
 

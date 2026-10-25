@@ -25,9 +25,18 @@ AM Speed Up is designed for people who are nervous about breaking something. The
 
 The full details will be added here before the first release.
 
+## Privacy
+
+AM Speed Up doesn't collect information about you or your PC, and has no tracking or analytics. It only goes online to:
+
+- **Check a Pro licence key** with Lemon Squeezy, who sell AM Speed Up Pro. Only the key and a random label for the PC are sent.
+- **Download McAfee's or Norton's own removal tool** from their website, if you choose to remove one of them.
+
+Links you click, like "Get help", open in your web browser.
+
 ## Free and Pro
 
-AM Speed Up will have a free version and a Pro version unlocked with a licence key. The safety features above are in both. Details will be added before the first release.
+AM Speed Up will have a free version and a Pro version you get with a licence key. The safety features above are in both. Details will be added before the first release.
 
 ## Help and support
 
