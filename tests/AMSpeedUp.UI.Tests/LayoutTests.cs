@@ -111,6 +111,66 @@ public class LayoutTests
             $"layout-message-{Percent(scale)}", 520, null, scale);
     });
 
+    // The check itself has to catch problems, or every test above would pass whatever the layout.
+
+    [Fact]
+    public void The_check_catches_text_that_is_cut_off() => WpfHost.Run(() =>
+    {
+        var window = new Window
+        {
+            Content = new StackPanel
+            {
+                Children = { new TextBlock { Text = "Turn on the monthly tune-up and clear clutter", Width = 60 } },
+            },
+        };
+
+        IReadOnlyList<string> problems = [];
+        Screenshots.Render(window, "layout-check-self-test-text", 400, 100, 1, frame => problems = LayoutCheck.FindClipped(frame));
+        window.Close();
+
+        Assert.Contains(problems, p => p.StartsWith("Text cut off", StringComparison.Ordinal));
+    });
+
+    [Fact]
+    public void The_check_catches_a_button_past_the_right_hand_edge() => WpfHost.Run(() =>
+    {
+        var window = new Window
+        {
+            Content = new Canvas
+            {
+                Children = { new Button { Content = "Free up space", Width = 200, Margin = new Thickness(320, 0, 0, 0) } },
+            },
+        };
+
+        IReadOnlyList<string> problems = [];
+        Screenshots.Render(window, "layout-check-self-test-edge", 400, 100, 1, frame => problems = LayoutCheck.FindClipped(frame));
+        window.Close();
+
+        Assert.Contains(problems, p => p.Contains("Button \"Free up space\"", StringComparison.Ordinal));
+    });
+
+    [Fact]
+    public void The_check_is_happy_with_text_that_wraps_or_fits() => WpfHost.Run(() =>
+    {
+        var window = new Window
+        {
+            Content = new StackPanel
+            {
+                Children =
+                {
+                    new TextBlock { Text = "Short" },
+                    new TextBlock { Text = "A long sentence that wraps onto more lines instead of being cut off", TextWrapping = TextWrapping.Wrap },
+                },
+            },
+        };
+
+        IReadOnlyList<string> problems = ["not checked"];
+        Screenshots.Render(window, "layout-check-self-test-ok", 200, 200, 1, frame => problems = LayoutCheck.FindClipped(frame));
+        window.Close();
+
+        Assert.Empty(problems);
+    });
+
     private static void AssertFits(Window window, string name, double width, double? height, double scale)
     {
         IReadOnlyList<string> problems = [];
