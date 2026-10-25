@@ -15,10 +15,16 @@ public sealed record AppOptions(bool DryRun, IReadOnlyList<string> UnknownArgume
 
     public bool CheckAntivirus { get; init; }
 
+    /// <summary>Started by the monthly tune-up scheduled task: clean up with no window, then close.</summary>
+    public const string ScheduledTuneUpFlag = "--scheduled-tuneup";
+
+    public bool ScheduledTuneUp { get; init; }
+
     public static AppOptions Parse(IEnumerable<string>? args)
     {
         var dryRun = false;
         var checkAntivirus = false;
+        var scheduledTuneUp = false;
         var unknown = new List<string>();
 
         foreach (var raw in args ?? [])
@@ -42,12 +48,15 @@ public sealed record AppOptions(bool DryRun, IReadOnlyList<string> UnknownArgume
                 case CheckAntivirusFlag:
                     checkAntivirus = true;
                     break;
+                case ScheduledTuneUpFlag:
+                    scheduledTuneUp = true;
+                    break;
                 default:
                     unknown.Add(arg);
                     break;
             }
         }
 
-        return new AppOptions(dryRun, unknown) { CheckAntivirus = checkAntivirus };
+        return new AppOptions(dryRun, unknown) { CheckAntivirus = checkAntivirus, ScheduledTuneUp = scheduledTuneUp };
     }
 }

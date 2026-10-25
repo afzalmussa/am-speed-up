@@ -6,6 +6,7 @@ using AMSpeedUp.Core.Configuration;
 using AMSpeedUp.Core.Licensing;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Presets;
+using AMSpeedUp.Core.Reports;
 using AMSpeedUp.Core.Startup;
 using AMSpeedUp.Core.Undo;
 using AMSpeedUp.Services;
@@ -17,6 +18,7 @@ using AMSpeedUp.Windows.Licensing;
 using AMSpeedUp.Windows.Platform;
 using AMSpeedUp.Windows.Removal;
 using AMSpeedUp.Windows.Safety;
+using AMSpeedUp.Windows.Scheduling;
 using AMSpeedUp.Windows.Startup;
 using AMSpeedUp.Windows.VendorTools;
 
@@ -26,6 +28,7 @@ public partial class App : Application
 {
     // Two copies running at once could try to change the same things, so only one is allowed.
     private const string SingleInstanceName = @"Global\AMSoftware.SpeedUp.SingleInstance";
+    private const string TuneUpInstanceName = @"Global\AMSoftware.SpeedUp.TuneUp";
 
     private Mutex? _singleInstance;
     private IAppLog? _log;
@@ -40,6 +43,12 @@ public partial class App : Application
         DispatcherUnhandledException += OnDispatcherUnhandledException;
         AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
         TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+
+        if (options.ScheduledTuneUp)
+        {
+            RunScheduledTuneUp();
+            return;
+        }
 
         _singleInstance = new Mutex(initiallyOwned: true, SingleInstanceName, out var isFirstInstance);
         if (!isFirstInstance)
@@ -73,12 +82,15 @@ public partial class App : Application
         var undo = new FileUndoJournal(AppPaths.UndoHistory, _log);
         var runningPrograms = new WindowsRunningPrograms();
         var activity = new ActivityStatus();
+        var scheduler = new WindowsTuneUpScheduler(powerShell, _log);
 
         IActionExecutor[] executors =
         [
             new StoreAppRemover(powerShell, _log),
             new StartupItemChanger(powerShell, _log),
             new CleanupExecutor(runningPrograms, activity, _log),
+            new RecycleExecutor(_log),
+            new TuneUpScheduleExecutor(scheduler),
             new DesktopUninstaller(_log),
             new VendorToolRemover(
                 new VendorToolDownloader(_log),
@@ -95,6 +107,12 @@ public partial class App : Application
             new UiSafetyPrompts(dialogs, Dispatcher),
             executors,
             undo);
+
+        // Everything this session changes, and the figures each tab measures, for the before and after report.
+        var session = new SessionRecord();
+        runner.Finished += session.RecordRun;
+        var cleanupScanner = new WindowsCleanupScanner(runningPrograms, _log);
+        session.RecordFreeSpace(cleanupScanner.GetSystemDriveSpace());
 
         var licence = new LicenceManager(
             new LemonSqueezyLicenceService(LemonSqueezyLicenceService.CreateHttpClient(), settings.LemonSqueezy ?? new LemonSqueezySettings()),
@@ -114,7 +132,10 @@ public partial class App : Application
             afterRestart,
             _log,
             options,
-            IsPro);
+            IsPro)
+        {
+            Session = session,
+        };
 
         var startup = new StartupViewModel(
             new WindowsStartupInventory(powerShell, _log),
@@ -122,18 +143,29 @@ public partial class App : Application
             runner,
             dialogs,
             _log,
-            options);
+            options)
+        {
+            Session = session,
+        };
 
         var freeSpace = new FreeSpaceViewModel(
-            new WindowsCleanupScanner(runningPrograms, _log),
+            cleanupScanner,
             runner,
             activity,
             dialogs,
             shell,
             _log,
-            options);
+            options,
+            new LargeFilesViewModel(FileFinder.UserFolders, runner, dialogs, shell, _log, options, IsPro),
+            new TuneUpViewModel(scheduler, runner, dialogs, _log, options, IsPro))
+        {
+            Session = session,
+        };
 
-        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart, startup, freeSpace, licence);
+        var proTools = new ProToolsViewModel(
+            removeBloat, startup, freeSpace, runner, cleanupScanner, session, afterRestart, dialogs, _log, options, IsPro, systemInfo.WindowsDescription);
+
+        var viewModel = new MainViewModel(_log, shell, dialogs, settings, options, removeBloat, antivirus, afterRestart, startup, freeSpace, licence, proTools);
         dialogs.MainViewModel = viewModel;
         dialogs.LicenceViewModel = new LicenceViewModel(licence, dialogs, shell, settings);
 
@@ -146,12 +178,65 @@ public partial class App : Application
             try
             {
                 await viewModel.RunStartupChecksAsync();
+                await scheduler.KeepInstalledCopyUpToDateAsync();
             }
             catch (Exception ex)
             {
                 _log.Error("The startup checks failed.", ex);
             }
         };
+    }
+
+    /// <summary>
+    /// Started by the monthly tune-up task: no window, only the safe clean-up the user agreed to
+    /// when they turned the tune-up on, everything logged, then close.
+    /// </summary>
+    private void RunScheduledTuneUp()
+    {
+        var log = _log!;
+        _singleInstance = new Mutex(initiallyOwned: true, TuneUpInstanceName, out var isFirst);
+        if (!isFirst)
+        {
+            log.Info("A monthly tune-up is already running. This one has stopped.");
+            _singleInstance.Dispose();
+            _singleInstance = null;
+            Shutdown();
+            return;
+        }
+
+        log.Info($"{AppInfo.ProductName} {AppInfo.Version} started by the monthly tune-up.");
+        var settings = AppSettings.LoadEmbedded();
+        var powerShell = new PowerShellRunner(log);
+        var runningPrograms = new WindowsRunningPrograms();
+        var runner = new ActionRunner(
+            log,
+            new WindowsRestorePointService(powerShell, log),
+            new WindowsAntivirusStatusService(powerShell, log),
+            new UnattendedPrompts(log),
+            [new CleanupExecutor(runningPrograms, new ActivityStatus(), log)],
+            new FileUndoJournal(AppPaths.UndoHistory, log));
+        var licence = new LicenceManager(
+            new LemonSqueezyLicenceService(LemonSqueezyLicenceService.CreateHttpClient(), settings.LemonSqueezy ?? new LemonSqueezySettings()),
+            new DpapiLicenceStore(AppPaths.Licence),
+            log,
+            DeveloperMode.IsOn());
+
+        Dispatcher.InvokeAsync(async () =>
+        {
+            try
+            {
+                await licence.CheckIfDueAsync();
+                await TuneUpRun.RunAsync(() => licence.Current.IsPro, new WindowsCleanupScanner(runningPrograms, log), runner, log);
+            }
+            catch (Exception ex)
+            {
+                log.Error("The monthly tune-up stopped with an error.", ex);
+            }
+            finally
+            {
+                Shutdown();
+            }
+        });
     }
 
     protected override void OnExit(ExitEventArgs e)

@@ -1,0 +1,137 @@
+{
+  "$schema": "./preset.schema.json",
+  "id": "dell-extras",
+  "name": "Dell extras",
+  "description": "Extra software Dell put on the PC. Tools that keep your drivers and BIOS up to date are kept.",
+  "tier": "pro",
+  "items": [
+    {
+      "type": "desktop",
+      "match": "Dell SupportAssist*",
+      "name": "Dell SupportAssist",
+      "description": "Keeps your Dell PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "store",
+      "match": "DellInc.DellSupportAssistforPCs",
+      "name": "Dell SupportAssist",
+      "description": "Keeps your Dell PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "Dell Command | Update*",
+      "name": "Dell Command Update",
+      "description": "Keeps your Dell PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "store",
+      "match": "DellInc.DellCommandUpdate",
+      "name": "Dell Command Update",
+      "description": "Keeps your Dell PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "Dell Update*",
+      "name": "Dell Update",
+      "description": "Keeps your Dell PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "desktop",
+      "match": "Dell Power Manager*",
+      "name": "Dell Power Manager",
+      "description": "Looks after the battery and fan settings on Dell laptops. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "store",
+      "match": "DellInc.DellPowerManager",
+      "name": "Dell Power Manager",
+      "description": "Looks after the battery and fan settings on Dell laptops. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "Dell Digital Delivery*",
+      "name": "Dell Digital Delivery",
+      "description": "Downloads software you bought with the PC. Not needed once it's installed.",
+      "recommendation": "optional",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "store",
+      "match": "DellInc.DellDigitalDelivery",
+      "name": "Dell Digital Delivery",
+      "description": "Downloads software you bought with the PC. Not needed once it's installed.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "desktop",
+      "match": "Dell Customer Connect*",
+      "name": "Dell Customer Connect",
+      "description": "Shows surveys and offers from Dell.",
+      "recommendation": "remove",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "store",
+      "match": "DellInc.DellCustomerConnect",
+      "name": "Dell Customer Connect",
+      "description": "Shows surveys and offers from Dell.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "Dell Product Registration*",
+      "name": "Dell Product Registration",
+      "description": "Asks you to register the PC with Dell. Not needed for your warranty.",
+      "recommendation": "remove",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "desktop",
+      "match": "Dell Mobile Connect*",
+      "name": "Dell Mobile Connect",
+      "description": "Connected phones to the PC. Dell has stopped it, and Windows' own Phone Link does the same job.",
+      "recommendation": "remove",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "store",
+      "match": "DellInc.DellMobileConnect",
+      "name": "Dell Mobile Connect",
+      "description": "Connected phones to the PC. Dell has stopped it, and Windows' own Phone Link does the same job.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "DellInc.PartnerPromo",
+      "name": "Dell offers",
+      "description": "Adverts for other companies' software.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "Dell Optimizer*",
+      "name": "Dell Optimizer",
+      "description": "Adjusts performance and sound settings automatically. Keep it if you use it.",
+      "recommendation": "optional",
+      "publisher": "Dell*"
+    },
+    {
+      "type": "store",
+      "match": "DellInc.DellOptimizer",
+      "name": "Dell Optimizer",
+      "description": "Adjusts performance and sound settings automatically. Keep it if you use it.",
+      "recommendation": "optional"
+    }
+  ]
+}

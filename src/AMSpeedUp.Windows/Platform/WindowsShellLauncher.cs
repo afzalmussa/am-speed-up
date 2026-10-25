@@ -82,6 +82,18 @@ public sealed class WindowsShellLauncher(IAppLog log) : IShellLauncher
         return info;
     }
 
+    public bool ShowInFolder(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            return OpenFolder(Path.GetDirectoryName(filePath) ?? filePath);
+        }
+
+        var info = new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe")) { UseShellExecute = false };
+        info.ArgumentList.Add("/select," + filePath);
+        return Start(info, $"File Explorer at {filePath}");
+    }
+
     public bool OpenStoreSearch(string appName)
     {
         var uri = "ms-windows-store://search/?query=" + Uri.EscapeDataString(appName.Trim());

@@ -13,6 +13,9 @@ public interface IDialogService
 
     void ShowLicence();
 
+    /// <summary>Explains that a feature needs Pro, with ways to buy it or enter a key.</summary>
+    void ShowProRequired(string feature);
+
     /// <summary>A yes/no question. The "no" button is the main one, so pressing Enter is the safe choice.</summary>
     bool Confirm(string heading, string body, string yesText, string noText);
 
@@ -28,4 +31,7 @@ public interface IDialogService
     bool ConfirmVendorTool(VendorToolInfo tool);
 
     void ShowVendorToolProblem(VendorToolInfo tool, string reason);
+
+    /// <summary>Says where the report was saved, with buttons to open it or show it in its folder.</summary>
+    void ShowReportSaved(string path);
 }

@@ -7,6 +7,30 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:FreeSpaceViewModel}">
 
+    <UserControl.Resources>
+        <!-- One file in the large file and duplicate lists -->
+        <DataTemplate x:Key="FoundFileRow" DataType="{x:Type vm:FoundFileViewModel}">
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <CheckBox Style="{StaticResource ChoiceCheckBox}" IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                          AutomationProperties.Name="{Binding Name}" Margin="0,0,16,0">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource BodyText}" FontWeight="SemiBold" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Style="{StaticResource MutedText}" FontSize="14" Text="{Binding Folder}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                        <TextBlock Style="{StaticResource MutedText}" FontSize="14" Text="{Binding DateText}" />
+                    </StackPanel>
+                </CheckBox>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+                    <TextBlock Style="{StaticResource BodyText}" FontWeight="SemiBold" Text="{Binding SizeText}" HorizontalAlignment="Right" />
+                    <Button Style="{StaticResource LinkButton}" Content="Show in folder" Command="{Binding ShowInFolderCommand}" HorizontalAlignment="Right" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="32,24" MaxWidth="900" HorizontalAlignment="Left">
             <TextBlock Style="{StaticResource HeadingText}" Text="Free up space" />
@@ -99,6 +123,85 @@
                 <TextBlock Style="{StaticResource MutedText}" FontSize="15" Margin="0,4,0,0"
                            Text="You'll see exactly what will be deleted before anything happens." />
             </StackPanel>
+
+            <!-- Pro: monthly tune-up -->
+            <Border Style="{StaticResource Card}" Margin="0,32,0,0" DataContext="{Binding TuneUp}"
+                    Visibility="{Binding DataContext.HasTuneUp, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource SubheadingText}" Text="Monthly tune-up" />
+                        <Border Style="{StaticResource ProBadge}">
+                            <TextBlock Text="Pro" FontWeight="Bold" FontSize="14" Foreground="{StaticResource MintBrush}" />
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,6,0,0" Text="{Binding WhatItDoes}" />
+                    <TextBlock Style="{StaticResource BodyText}" FontWeight="SemiBold" Margin="0,12,0,0" Text="{Binding StatusText}" />
+                    <TextBlock Style="{StaticResource MutedText}" FontSize="15" Text="{Binding LastRunText}" />
+                    <Button Style="{StaticResource SecondaryButton}" Content="{Binding ButtonText}" Command="{Binding ToggleCommand}"
+                            HorizontalAlignment="Left" Margin="0,14,0,0" />
+                    <TextBlock Style="{StaticResource BodyText}" Margin="0,10,0,0" Text="{Binding Message}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Pro: large and duplicate files -->
+            <Border Style="{StaticResource Card}" Margin="0,32,0,0" DataContext="{Binding LargeFiles}"
+                    Visibility="{Binding DataContext.HasLargeFileFinder, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource SubheadingText}" Text="Find large and duplicate files" />
+                        <Border Style="{StaticResource ProBadge}">
+                            <TextBlock Text="Pro" FontWeight="Bold" FontSize="14" Foreground="{StaticResource MintBrush}" />
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,6,0,0"
+                               Text="Looks through your Desktop, Documents, Downloads, Pictures, Videos and Music. Nothing is ticked for you. Anything you choose goes to the Recycle Bin, so you can put it back." />
+                    <Button Style="{StaticResource SecondaryButton}" Content="{Binding SearchButtonText}" Command="{Binding SearchCommand}"
+                            HorizontalAlignment="Left" Margin="0,14,0,0" />
+
+                    <StackPanel Margin="0,14,0,0" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+                        <TextBlock Style="{StaticResource BodyText}" FontWeight="SemiBold" Text="{Binding BusyText}" />
+                        <ProgressBar IsIndeterminate="True" Height="8" Margin="0,10,0,0" Foreground="{StaticResource MintBrush}"
+                                     Background="{StaticResource LightBrush}" BorderThickness="0" AutomationProperties.Name="Working, please wait" />
+                    </StackPanel>
+
+                    <ItemsControl ItemsSource="{Binding Summary}" Margin="0,14,0,0" Visibility="{Binding HasSummary, Converter={StaticResource BoolToVisibility}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{StaticResource BodyText}" Text="{Binding}" Margin="0,2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Style="{StaticResource BodyText}" Margin="0,14,0,0" Visibility="{Binding ShowNothingFound, Converter={StaticResource BoolToVisibility}}"
+                               Text="No large or duplicate files found in your folders." />
+
+                    <StackPanel Margin="0,20,0,0" Visibility="{Binding HasLargeFiles, Converter={StaticResource BoolToVisibility}}">
+                        <TextBlock Style="{StaticResource SubheadingText}" FontSize="17" Text="Large files" />
+                        <ItemsControl ItemsSource="{Binding LargeFiles}" ItemTemplate="{StaticResource FoundFileRow}" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,24,0,0" Visibility="{Binding HasDuplicates, Converter={StaticResource BoolToVisibility}}">
+                        <TextBlock Style="{StaticResource SubheadingText}" FontSize="17" Text="Duplicate files" />
+                        <TextBlock Style="{StaticResource MutedText}" FontSize="15" Text="These files are exact copies of each other. Tick the copies you don't need, and keep at least one." />
+                        <ItemsControl ItemsSource="{Binding Duplicates}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,12,0,4" Margin="0,12,0,0">
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource BodyText}" FontWeight="SemiBold" Text="{Binding Heading}" />
+                                            <TextBlock Style="{StaticResource MutedText}" FontSize="14" Text="{Binding SpareText}" />
+                                            <ItemsControl ItemsSource="{Binding Files}" ItemTemplate="{StaticResource FoundFileRow}" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <Button Style="{StaticResource PrimaryButton}" Content="{Binding RecycleButtonText}" Command="{Binding RecycleSelectedCommand}"
+                            HorizontalAlignment="Left" Margin="0,20,0,0" />
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

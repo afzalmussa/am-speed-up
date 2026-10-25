@@ -87,6 +87,7 @@ public static class SafetyText
     public static string UndoNote(Actions.UndoSupport undo) => undo switch
     {
         Actions.UndoSupport.InApp => "You can turn these back on at any time in AM Speed Up.",
+        Actions.UndoSupport.FromRecycleBin => "These go to the Recycle Bin, so you can put them back from there if you change your mind.",
         Actions.UndoSupport.ReinstallFromApp =>
             "You can reinstall these later from AM Speed Up or the Microsoft Store.",
         Actions.UndoSupport.RestorePointOnly =>

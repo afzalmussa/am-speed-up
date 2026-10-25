@@ -88,4 +88,21 @@ public class AppOptionsAntivirusCheckTests
     {
         Assert.False(AppOptions.Parse([]).CheckAntivirus);
     }
+
+    [Fact]
+    public void Scheduled_tune_up_flag_is_recognised()
+    {
+        var options = AppOptions.Parse([AppOptions.ScheduledTuneUpFlag]);
+
+        Assert.True(options.ScheduledTuneUp);
+        Assert.False(options.DryRun);
+        Assert.Empty(options.UnknownArguments);
+        Assert.Equal("--scheduled-tuneup", AppOptions.ScheduledTuneUpFlag);
+    }
+
+    [Fact]
+    public void Normal_starts_are_not_the_tune_up()
+    {
+        Assert.False(AppOptions.Parse([]).ScheduledTuneUp);
+    }
 }

@@ -62,6 +62,56 @@ public class ShippedPresetTests
         Assert.Equal(PresetTier.Free, loaded["trial-antivirus"].Tier);
     }
 
+    [Theory]
+    [InlineData("hp-extras")]
+    [InlineData("dell-extras")]
+    [InlineData("lenovo-extras")]
+    [InlineData("acer-extras")]
+    [InlineData("asus-extras")]
+    public void Manufacturer_presets_are_Pro(string id)
+    {
+        var preset = PresetLibrary.LoadEmbedded(new MemoryLog()).Single(p => p.Id == id);
+
+        Assert.Equal(PresetTier.Pro, preset.Tier);
+    }
+
+    [Fact]
+    public void Every_manufacturer_tool_that_updates_drivers_or_BIOS_is_kept_with_the_reason()
+    {
+        var entries = PresetLibrary.LoadEmbedded(new MemoryLog()).Where(p => p.Tier == PresetTier.Pro).SelectMany(p => p.Entries).ToList();
+
+        var updaters = entries.Where(e => e.Description.Contains("drivers and BIOS up to date", StringComparison.Ordinal)).ToList();
+        Assert.True(updaters.Count >= 10);
+        Assert.All(updaters, e => Assert.Equal(Recommendation.Keep, e.Recommendation));
+
+        foreach (var name in new[] { "HP Support Assistant", "Dell SupportAssist", "Dell Command Update", "Lenovo Vantage", "Lenovo System Update", "Acer Care Center", "MyASUS", "ASUS Live Update" })
+        {
+            Assert.Contains(updaters, e => e.Name == name);
+        }
+    }
+
+    [Theory]
+    [InlineData("HP Support Assistant", "HP Inc.", Recommendation.Keep)]
+    [InlineData("HP JumpStart Launch", "HP Inc.", Recommendation.Remove)]
+    [InlineData("Dell SupportAssist", "Dell Inc.", Recommendation.Keep)]
+    [InlineData("Dell Customer Connect", "Dell Inc.", Recommendation.Remove)]
+    [InlineData("Lenovo Vantage Service", "Lenovo Group Ltd.", Recommendation.Keep)]
+    [InlineData("Acer Jumpstart", "Acer Incorporated", Recommendation.Remove)]
+    [InlineData("MyASUS", "ASUSTeK COMPUTER INC.", Recommendation.Keep)]
+    public void Manufacturer_programs_get_the_expected_advice_but_only_with_Pro(string name, string publisher, Recommendation expected)
+    {
+        var presets = PresetLibrary.LoadEmbedded(new MemoryLog());
+        var app = Apps.Desktop(name, publisher);
+
+        var withPro = Assert.Single(PresetMatcher.Match(presets, [app], isPro: true).Groups.SelectMany(g => g.Items));
+        var free = Assert.Single(PresetMatcher.Match(presets, [app], isPro: false).Groups.SelectMany(g => g.Items));
+
+        Assert.Equal(expected, withPro.Recommendation);
+        Assert.Equal(expected == Recommendation.Remove, withPro.IsTickedByDefault);
+        Assert.True(free.IsLocked);
+        Assert.False(free.IsTickedByDefault);
+    }
+
     [Fact]
     public void Every_description_is_a_short_sentence_without_jargon()
     {
