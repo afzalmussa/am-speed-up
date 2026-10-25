@@ -158,7 +158,7 @@ public sealed class LargeFilesViewModelTests : IDisposable
         {
             DataContext = new MainViewModel(new FakeLog(), new FakeShell(), new FakeDialogs(), AppSettings.LoadEmbedded(), AppOptions.Default, freeSpace: freeSpace),
         };
-        var tabs = (System.Windows.Controls.TabControl)((System.Windows.Controls.Grid)window.Content).Children[2];
+        var tabs = ((System.Windows.Controls.Grid)window.Content).Children.OfType<System.Windows.Controls.TabControl>().Single();
         tabs.SelectedIndex = 2;
 
         Assert.True(Screenshots.HasContent(Screenshots.Render(window, "free-up-space-with-large-files", 1040, 1900)));

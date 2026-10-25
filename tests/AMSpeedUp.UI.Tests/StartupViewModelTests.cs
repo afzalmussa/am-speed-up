@@ -201,7 +201,7 @@ public class StartupViewModelTests
         {
             DataContext = new MainViewModel(new FakeLog(), new FakeShell(), new FakeDialogs(), AppSettings.LoadEmbedded(), AppOptions.Default, startup: vm),
         };
-        var tabs = (System.Windows.Controls.TabControl)((System.Windows.Controls.Grid)window.Content).Children[2];
+        var tabs = ((System.Windows.Controls.Grid)window.Content).Children.OfType<System.Windows.Controls.TabControl>().Single();
         tabs.SelectedIndex = 1;
 
         Assert.True(Screenshots.HasContent(Screenshots.Render(window, "startup", 1040, 1300)));
