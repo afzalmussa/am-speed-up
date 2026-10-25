@@ -372,7 +372,7 @@ public class LicenceManagerTests
 #endif
     }
 
-    // Privacy and robustness
+    // Privacy and damaged files
 
     [Fact]
     public async Task The_full_key_is_never_written_to_the_log()
