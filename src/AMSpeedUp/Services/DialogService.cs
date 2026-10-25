@@ -10,8 +10,10 @@ namespace AMSpeedUp.Services;
 
 public sealed class DialogService(IShellLauncher shell) : IDialogService
 {
-    // Set after construction because the view model and this service need each other.
+    // Set after construction because the view models and this service need each other.
     public MainViewModel? MainViewModel { get; set; }
+
+    public LicenceViewModel? LicenceViewModel { get; set; }
 
     public void ShowMessage(string title, string message) =>
         MessageWindow.Show(Owner, title, message);
@@ -21,6 +23,20 @@ public sealed class DialogService(IShellLauncher shell) : IDialogService
         var about = new AboutWindow { DataContext = MainViewModel, Owner = Owner };
         about.ShowDialog();
     }
+
+    public void ShowLicence()
+    {
+        var window = new LicenceWindow { DataContext = LicenceViewModel };
+        if (Owner is { } owner)
+        {
+            window.Owner = owner;
+        }
+
+        window.ShowDialog();
+    }
+
+    public bool Confirm(string heading, string body, string yesText, string noText) =>
+        ChoiceWindow.Show(Owner, new Choice(heading, body, PrimaryText: noText, SecondaryText: yesText)) == ChoiceResult.Secondary;
 
     public bool ConfirmPlan(PlanPreview preview)
     {

@@ -72,6 +72,20 @@ internal sealed class FakeDialogs : IDialogService
 
     public void ShowAbout() => AboutShown++;
 
+    public int LicenceShown { get; private set; }
+
+    public void ShowLicence() => LicenceShown++;
+
+    public bool ConfirmAnswerForQuestions { get; set; } = true;
+
+    public List<string> Questions { get; } = [];
+
+    public bool Confirm(string heading, string body, string yesText, string noText)
+    {
+        Questions.Add(heading);
+        return ConfirmAnswerForQuestions;
+    }
+
     public bool ConfirmAnswer { get; set; }
 
     public List<PlanPreview> Previews { get; } = [];

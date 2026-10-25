@@ -14,7 +14,7 @@ public class MainViewModelTests
         new(_log, _shell, _dialogs, settings ?? new AppSettings { DonateUrl = "https://ko-fi.com/afzalm" }, options ?? AppOptions.Default);
 
     [Fact]
-    public void Shows_free_version_until_licensing_is_built()
+    public void Shows_free_version_without_a_licence()
     {
         Assert.Equal("Free version", Create().LicenceStatusText);
     }
@@ -121,10 +121,27 @@ public class MainViewModelTests
     }
 
     [Fact]
-    public void Licence_key_button_explains_it_is_not_ready_yet()
+    public void Licence_key_button_opens_the_licence_window()
     {
         Create().EnterLicenceKeyCommand.Execute(null);
 
-        Assert.Single(_dialogs.Messages);
+        Assert.Equal(1, _dialogs.LicenceShown);
+    }
+
+    [Fact]
+    public void Get_Pro_opens_the_checkout_page()
+    {
+        var vm = Create(new AppSettings { CheckoutUrl = "https://am-software.lemonsqueezy.com/checkout/buy/abc" });
+
+        Assert.True(vm.CanGetPro);
+        vm.GetProCommand.Execute(null);
+
+        Assert.Equal(["https://am-software.lemonsqueezy.com/checkout/buy/abc"], _shell.OpenedUrls);
+    }
+
+    [Fact]
+    public void Get_Pro_is_hidden_when_there_is_no_checkout_link()
+    {
+        Assert.False(Create(new AppSettings()).CanGetPro);
     }
 }

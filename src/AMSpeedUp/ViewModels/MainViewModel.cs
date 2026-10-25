@@ -1,4 +1,5 @@
 using AMSpeedUp.Core.Configuration;
+using AMSpeedUp.Core.Licensing;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Platform;
 using AMSpeedUp.Core.Safety;
@@ -18,6 +19,7 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly AppOptions _options;
     private readonly IAntivirusStatusService? _antivirus;
     private readonly IAntivirusCheckAfterRestart? _afterRestart;
+    private readonly LicenceManager? _licence;
 
     public MainViewModel(
         IAppLog log,
@@ -29,7 +31,8 @@ public sealed partial class MainViewModel : ObservableObject
         IAntivirusStatusService? antivirus = null,
         IAntivirusCheckAfterRestart? afterRestart = null,
         StartupViewModel? startup = null,
-        FreeSpaceViewModel? freeSpace = null)
+        FreeSpaceViewModel? freeSpace = null,
+        LicenceManager? licence = null)
     {
         _log = log;
         _shell = shell;
@@ -41,6 +44,16 @@ public sealed partial class MainViewModel : ObservableObject
         RemoveBloat = removeBloat;
         Startup = startup;
         FreeSpace = freeSpace;
+        _licence = licence;
+        if (licence is not null)
+        {
+            licence.Changed += () =>
+            {
+                OnPropertyChanged(nameof(LicenceStatusText));
+                OnPropertyChanged(nameof(IsPro));
+                OnPropertyChanged(nameof(CanGetPro));
+            };
+        }
         IsDryRun = options.DryRun;
     }
 
@@ -57,8 +70,12 @@ public sealed partial class MainViewModel : ObservableObject
     /// <summary>True when started with --dry-run. Nothing on the PC is changed, only logged.</summary>
     public bool IsDryRun { get; }
 
-    // Licensing arrives in a later phase. Until then everyone is on the free version.
-    public string LicenceStatusText => "Free version";
+    public string LicenceStatusText => _licence is null ? "Free version" : LicenceText.Badge(_licence.Current);
+
+    public bool IsPro => _licence?.Current.IsPro ?? false;
+
+    /// <summary>The header's "Get Pro" button shows on the free version when a checkout link is set up.</summary>
+    public bool CanGetPro => !IsPro && _settings.HasCheckoutUrl;
 
     public bool CanDonate => _settings.HasDonateUrl;
 
@@ -105,10 +122,17 @@ public sealed partial class MainViewModel : ObservableObject
     private void ShowAbout() => _dialogs.ShowAbout();
 
     [RelayCommand]
-    private void EnterLicenceKey() =>
-        _dialogs.ShowMessage(
-            "Licence keys are coming soon",
-            "You'll be able to enter a licence key here in a future version of AM Speed Up. Everything in the free version works without one.");
+    private void EnterLicenceKey() => _dialogs.ShowLicence();
+
+    [RelayCommand]
+    private void GetPro()
+    {
+        if (_settings.HasCheckoutUrl)
+        {
+            _log.Info("Opening the AM Speed Up Pro checkout page.");
+            Open(_settings.CheckoutUrl!, "the AM Speed Up Pro page");
+        }
+    }
 
     /// <summary>
     /// Runs once the window is showing. After a removal tool restarted the PC, Windows opens the
@@ -116,6 +140,22 @@ public sealed partial class MainViewModel : ObservableObject
     /// </summary>
     public async Task RunStartupChecksAsync()
     {
+        if (_licence is not null)
+        {
+            // In the background: a slow or missing internet connection never holds up the app.
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _licence.CheckIfDueAsync().ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _log.Warning("The licence check didn't finish.", ex);
+                }
+            });
+        }
+
         if (!_options.CheckAntivirus || _antivirus is null)
         {
             return;

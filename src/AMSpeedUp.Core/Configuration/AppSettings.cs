@@ -24,6 +24,9 @@ public sealed record AppSettings
     /// <summary>Where the "Donate" button sends people. Must be https.</summary>
     public string? DonateUrl { get; init; }
 
+    /// <summary>Which Lemon Squeezy store and product a licence key must belong to.</summary>
+    public LemonSqueezySettings? LemonSqueezy { get; init; }
+
     public bool HasCheckoutUrl => IsUsableUrl(CheckoutUrl);
 
     public bool HasDonateUrl => IsUsableUrl(DonateUrl);
@@ -55,4 +58,20 @@ public sealed record AppSettings
         && Uri.TryCreate(url.Trim(), UriKind.Absolute, out var uri)
         && uri.Scheme == Uri.UriSchemeHttps
         && !string.IsNullOrEmpty(uri.Host);
+}
+
+/// <summary>
+/// A licence key only turns on Pro if Lemon Squeezy says it was sold by this store for this product.
+/// Without this check, a key for any other Lemon Squeezy product would work. These ids aren't secret.
+/// </summary>
+public sealed record LemonSqueezySettings
+{
+    public long StoreId { get; init; }
+
+    public long ProductId { get; init; }
+
+    /// <summary>Optional. When set, the key must also be for this variant.</summary>
+    public long? VariantId { get; init; }
+
+    public bool IsConfigured => StoreId > 0 && ProductId > 0;
 }
