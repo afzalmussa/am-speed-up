@@ -91,6 +91,9 @@ public sealed class ActionRunner
         _time = time ?? TimeProvider.System;
     }
 
+    /// <summary>Raised after every run, from whichever thread ran it. Used for the before and after report.</summary>
+    public event Action<RunReport>? Finished;
+
     public async Task<RunReport> RunAsync(ConfirmedPlan confirmed, IProgress<RunProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(confirmed);
@@ -135,7 +138,7 @@ public sealed class ActionRunner
                     {
                         _log.Info("The user chose to cancel because there's no new restore point. Nothing was changed.");
                         var notStarted = plan.Actions.Select(a => new ActionOutcome(a, OutcomeStatus.NotStarted, "Cancelled before starting.")).ToList();
-                        return new RunReport(notStarted, restorePoint, null, CancelledBeforeStarting: true);
+                        return Finish(new RunReport(notStarted, restorePoint, null, CancelledBeforeStarting: true));
                     }
 
                     _log.Info("The user chose to continue without a new restore point.");
@@ -184,7 +187,22 @@ public sealed class ActionRunner
         }
 
         _log.Info($"Finished \"{plan.Title}\": {Summarise(outcomes)}.");
-        return new RunReport(outcomes, restorePoint, antivirus, CancelledBeforeStarting: false);
+        return Finish(new RunReport(outcomes, restorePoint, antivirus, CancelledBeforeStarting: false));
+    }
+
+    private RunReport Finish(RunReport report)
+    {
+        try
+        {
+            Finished?.Invoke(report);
+        }
+        catch (Exception ex)
+        {
+            // The changes are already made, so a problem keeping a note of them mustn't hide that.
+            _log.Error("Couldn't note what this run changed for the report.", ex);
+        }
+
+        return report;
     }
 
     private async Task<ActionOutcome> RunOneAsync(PlannedAction action, bool dryRun, string verb, CancellationToken cancellationToken)
@@ -306,4 +324,23 @@ public sealed class ActionRunner
 
     private static string Summarise(IReadOnlyList<ActionOutcome> outcomes) =>
         string.Join(", ", outcomes.GroupBy(o => o.Status).OrderBy(g => g.Key).Select(g => $"{g.Count()} {g.Key.ToString().ToLowerInvariant()}"));
+}
+
+/// <summary>
+/// For runs with nobody watching, like the monthly tune-up. It never says yes on the user's behalf:
+/// no restore point means cancel, and warnings go to the log.
+/// </summary>
+public sealed class UnattendedPrompts(IAppLog log) : ISafetyPrompts
+{
+    public Task<bool> ContinueWithoutRestorePointAsync(RestorePointResult result, CancellationToken cancellationToken)
+    {
+        log.Warning("No restore point could be made and nobody is here to decide, so nothing was changed.");
+        return Task.FromResult(false);
+    }
+
+    public Task WarnAboutAntivirusAsync(AntivirusCheckResult result, CancellationToken cancellationToken)
+    {
+        log.Warning("Antivirus warning (nobody was here to see it): " + SafetyText.AntivirusSummary(result));
+        return Task.CompletedTask;
+    }
 }

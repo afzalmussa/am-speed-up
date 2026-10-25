@@ -17,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -61,7 +62,27 @@
                        Text="Test mode is on. The app will show what it would do, but nothing on this PC will be changed." />
         </Border>
 
-        <TabControl Grid.Row="2" Style="{StaticResource MainTabControl}" ItemContainerStyle="{StaticResource MainTabItem}">
+        <!-- Pro toolbar: shown to everyone, explains Pro when clicked on the free version -->
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1" Padding="24,10" DataContext="{Binding ProTools}"
+                Visibility="{Binding DataContext.HasProTools, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibility}}">
+            <DockPanel LastChildFill="True">
+                <Border DockPanel.Dock="Left" Background="{StaticResource DarkBrush}" CornerRadius="12" Padding="10,3"
+                        Margin="0,0,14,0" VerticalAlignment="Center">
+                    <TextBlock Text="Pro" Foreground="{StaticResource MintBrush}" FontWeight="Bold" FontSize="14" />
+                </Border>
+                <Button DockPanel.Dock="Left" Content="Do everything recommended" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding DoEverythingCommand}" Margin="0,0,10,0"
+                        ToolTip="Checks all three tabs and shows everything recommended in one preview before anything changes." />
+                <Button DockPanel.Dock="Left" Content="Before and after report" Style="{StaticResource SecondaryButton}"
+                        Command="{Binding MakeReportCommand}" Margin="0,0,14,0"
+                        ToolTip="Saves a page in your Documents folder showing what changed while AM Speed Up was open." />
+                <TextBlock Text="{Binding BusyText}" Style="{StaticResource MutedText}" VerticalAlignment="Center" TextWrapping="Wrap"
+                           Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
+            </DockPanel>
+        </Border>
+
+        <TabControl Grid.Row="3" Style="{StaticResource MainTabControl}" ItemContainerStyle="{StaticResource MainTabItem}">
             <TabItem Header="Remove bloat" AutomationProperties.Name="Remove bloat">
                 <views:RemoveBloatView DataContext="{Binding RemoveBloat}" />
             </TabItem>
@@ -76,7 +97,7 @@
         </TabControl>
 
         <!-- Footer -->
-        <Border Grid.Row="3" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrush}"
+        <Border Grid.Row="4" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="0,1,0,0" Padding="24,8">
             <DockPanel LastChildFill="False">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">

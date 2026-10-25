@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using AMSpeedUp.Core.Actions;
 using AMSpeedUp.Core.Configuration;
 using AMSpeedUp.Core.Logging;
+using AMSpeedUp.Core.Reports;
 using AMSpeedUp.Core.Startup;
 using AMSpeedUp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -38,6 +39,9 @@ public sealed partial class StartupViewModel : ObservableObject
     }
 
     public ObservableCollection<StartupItemViewModel> Items { get; } = [];
+
+    /// <summary>Notes how many programs start with Windows, for the before and after report.</summary>
+    public SessionRecord? Session { get; init; }
 
     public bool IsBusy
     {
@@ -188,6 +192,7 @@ public sealed partial class StartupViewModel : ObservableObject
             }
 
             HasLoaded = true;
+            Session?.RecordStartupOn(OnCount);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {

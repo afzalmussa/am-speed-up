@@ -32,7 +32,8 @@ public sealed partial class MainViewModel : ObservableObject
         IAntivirusCheckAfterRestart? afterRestart = null,
         StartupViewModel? startup = null,
         FreeSpaceViewModel? freeSpace = null,
-        LicenceManager? licence = null)
+        LicenceManager? licence = null,
+        ProToolsViewModel? proTools = null)
     {
         _log = log;
         _shell = shell;
@@ -44,6 +45,7 @@ public sealed partial class MainViewModel : ObservableObject
         RemoveBloat = removeBloat;
         Startup = startup;
         FreeSpace = freeSpace;
+        ProTools = proTools;
         _licence = licence;
         if (licence is not null)
         {
@@ -62,6 +64,11 @@ public sealed partial class MainViewModel : ObservableObject
     public StartupViewModel? Startup { get; }
 
     public FreeSpaceViewModel? FreeSpace { get; }
+
+    /// <summary>The Pro toolbar under the header.</summary>
+    public ProToolsViewModel? ProTools { get; }
+
+    public bool HasProTools => ProTools is not null;
 
     public string ProductName => AppInfo.ProductName;
 

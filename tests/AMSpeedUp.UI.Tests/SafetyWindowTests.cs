@@ -239,5 +239,7 @@ public class SafetyWindowTests
         }
 
         public bool OpenStoreSearch(string appName) => true;
+
+        public bool ShowInFolder(string filePath) => true;
     }
 }

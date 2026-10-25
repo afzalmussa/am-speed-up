@@ -11,6 +11,9 @@ public enum UndoSupport
     /// <summary>The app can undo it, for example turning a startup item back on.</summary>
     InApp,
 
+    /// <summary>Files moved to the Recycle Bin can be put back from there.</summary>
+    FromRecycleBin,
+
     /// <summary>Removed Store apps can usually be reinstalled from the app or the Microsoft Store.</summary>
     ReinstallFromApp,
 

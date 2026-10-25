@@ -1,0 +1,107 @@
+{
+  "$schema": "./preset.schema.json",
+  "id": "acer-extras",
+  "name": "Acer extras",
+  "description": "Extra software Acer put on the PC. Tools that keep your drivers and BIOS up to date are kept.",
+  "tier": "pro",
+  "items": [
+    {
+      "type": "desktop",
+      "match": "Acer Care Center*",
+      "name": "Acer Care Center",
+      "description": "Keeps your Acer PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Acer*"
+    },
+    {
+      "type": "store",
+      "match": "AcerIncorporated.AcerCareCenter*",
+      "name": "Acer Care Center",
+      "description": "Keeps your Acer PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "Acer Quick Access*",
+      "name": "Acer Quick Access",
+      "description": "Turns things like Bluetooth and the keyboard light on and off. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Acer*"
+    },
+    {
+      "type": "store",
+      "match": "AcerIncorporated.QuickAccess",
+      "name": "Acer Quick Access",
+      "description": "Turns things like Bluetooth and the keyboard light on and off. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "Acer Jumpstart*",
+      "name": "Acer Jumpstart",
+      "description": "A welcome tour Acer shows on new PCs. Not needed after the first day.",
+      "recommendation": "remove",
+      "publisher": "Acer*"
+    },
+    {
+      "type": "store",
+      "match": "AcerIncorporated.AcerJumpstart*",
+      "name": "Acer Jumpstart",
+      "description": "A welcome tour Acer shows on new PCs. Not needed after the first day.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "Acer Collection*",
+      "name": "Acer Collection",
+      "description": "Adverts for apps Acer recommends.",
+      "recommendation": "remove",
+      "publisher": "Acer*"
+    },
+    {
+      "type": "store",
+      "match": "AcerIncorporated.AcerCollection*",
+      "name": "Acer Collection",
+      "description": "Adverts for apps Acer recommends.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "Acer Product Registration*",
+      "name": "Acer Product Registration",
+      "description": "Asks you to register the PC with Acer. Not needed for your warranty.",
+      "recommendation": "remove",
+      "publisher": "Acer*"
+    },
+    {
+      "type": "store",
+      "match": "AcerIncorporated.AcerRegistration",
+      "name": "Acer Registration",
+      "description": "Asks you to register the PC with Acer. Not needed for your warranty.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "Acer UEIP Framework*",
+      "name": "Acer user experience programme",
+      "description": "Sends Acer information about how you use the PC.",
+      "recommendation": "remove",
+      "publisher": "Acer*"
+    },
+    {
+      "type": "store",
+      "match": "AcerIncorporated.UserExperienceImprovementProgram",
+      "name": "Acer user experience programme",
+      "description": "Sends Acer information about how you use the PC.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "Acer Portal*",
+      "name": "Acer Portal",
+      "description": "Acer's online storage service, which Acer has stopped.",
+      "recommendation": "remove",
+      "publisher": "Acer*"
+    }
+  ]
+}

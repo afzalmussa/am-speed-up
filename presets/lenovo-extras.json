@@ -1,0 +1,80 @@
+{
+  "$schema": "./preset.schema.json",
+  "id": "lenovo-extras",
+  "name": "Lenovo extras",
+  "description": "Extra software Lenovo put on the PC. Tools that keep your drivers and BIOS up to date are kept.",
+  "tier": "pro",
+  "items": [
+    {
+      "type": "store",
+      "match": "E046963F.LenovoCompanion",
+      "name": "Lenovo Vantage",
+      "description": "Keeps your Lenovo PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "Lenovo Vantage*",
+      "name": "Lenovo Vantage",
+      "description": "Keeps your Lenovo PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Lenovo*"
+    },
+    {
+      "type": "desktop",
+      "match": "Lenovo System Update*",
+      "name": "Lenovo System Update",
+      "description": "Keeps your Lenovo PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Lenovo*"
+    },
+    {
+      "type": "desktop",
+      "match": "Lenovo Commercial Vantage*",
+      "name": "Lenovo Commercial Vantage",
+      "description": "Keeps your Lenovo PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Lenovo*"
+    },
+    {
+      "type": "desktop",
+      "match": "Lenovo Hotkeys*",
+      "name": "Lenovo Hotkeys",
+      "description": "Makes the special keys on Lenovo keyboards work, like volume and brightness. Best kept.",
+      "recommendation": "keep",
+      "publisher": "Lenovo*"
+    },
+    {
+      "type": "desktop",
+      "match": "Lenovo Welcome*",
+      "name": "Lenovo Welcome",
+      "description": "A welcome tour Lenovo shows on new PCs. Not needed after the first day.",
+      "recommendation": "remove",
+      "publisher": "Lenovo*"
+    },
+    {
+      "type": "desktop",
+      "match": "Lenovo Now*",
+      "name": "Lenovo Now",
+      "description": "Shows offers and news from Lenovo.",
+      "recommendation": "remove",
+      "publisher": "Lenovo*"
+    },
+    {
+      "type": "desktop",
+      "match": "Lenovo Migration Assistant*",
+      "name": "Lenovo Migration Assistant",
+      "description": "Copies files from an old PC. Not needed once you've moved everything across.",
+      "recommendation": "optional",
+      "publisher": "Lenovo*"
+    },
+    {
+      "type": "desktop",
+      "match": "Lenovo Smart Appearance*",
+      "name": "Lenovo Smart Appearance",
+      "description": "Adds camera effects for video calls. Keep it if you use them.",
+      "recommendation": "optional",
+      "publisher": "Lenovo*"
+    }
+  ]
+}

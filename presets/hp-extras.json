@@ -1,0 +1,136 @@
+{
+  "$schema": "./preset.schema.json",
+  "id": "hp-extras",
+  "name": "HP extras",
+  "description": "Extra software HP put on the PC. Tools that keep your drivers and BIOS up to date are kept.",
+  "tier": "pro",
+  "items": [
+    {
+      "type": "desktop",
+      "match": "HP Support Assistant*",
+      "name": "HP Support Assistant",
+      "description": "Keeps your HP PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "HP*"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.HPSupportAssistant",
+      "name": "HP Support Assistant",
+      "description": "Keeps your HP PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.myHP",
+      "name": "myHP",
+      "description": "HP's control centre for things like screen, sound and power settings. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.HPJumpStarts",
+      "name": "HP JumpStart",
+      "description": "A welcome tour HP shows on new PCs. Not needed after the first day.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "HP JumpStart*",
+      "name": "HP JumpStart",
+      "description": "A welcome tour HP shows on new PCs. Not needed after the first day.",
+      "recommendation": "remove",
+      "publisher": "HP*"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.HPPrivacySettings",
+      "name": "HP Privacy Settings",
+      "description": "Asks whether HP can collect information about how you use the PC.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.HPWorkWell",
+      "name": "HP WorkWell",
+      "description": "Reminds you to take breaks. Most people never open it.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "HP Documentation*",
+      "name": "HP Documentation",
+      "description": "Manuals HP put on the PC. They're also on HP's website.",
+      "recommendation": "remove",
+      "publisher": "HP*"
+    },
+    {
+      "type": "desktop",
+      "match": "HP Connection Optimizer*",
+      "name": "HP Connection Optimizer",
+      "description": "Tries to pick the best Wi-Fi network. Windows already does this.",
+      "recommendation": "remove",
+      "publisher": "HP*"
+    },
+    {
+      "type": "desktop",
+      "match": "HP Notifications*",
+      "name": "HP Notifications",
+      "description": "Shows messages and offers from HP.",
+      "recommendation": "remove",
+      "publisher": "HP*"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.HPPCHardwareDiagnosticsWindows",
+      "name": "HP PC Hardware Diagnostics",
+      "description": "Tests the PC's parts if something seems wrong. Handy to keep for repairs.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "HP System Event Utility*",
+      "name": "HP System Event Utility",
+      "description": "Makes the special keys on HP keyboards work, like volume and brightness. Best kept.",
+      "recommendation": "keep",
+      "publisher": "HP*"
+    },
+    {
+      "type": "desktop",
+      "match": "HP Wolf Security*",
+      "name": "HP Wolf Security",
+      "description": "HP's extra security software. Keep it unless you've decided you don't need it.",
+      "recommendation": "optional",
+      "publisher": "HP*"
+    },
+    {
+      "type": "desktop",
+      "match": "HP Sure Click*",
+      "name": "HP Sure Click",
+      "description": "Opens risky web pages and files in a safe area. Keep it unless you've decided you don't need it.",
+      "recommendation": "optional",
+      "publisher": "HP*"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.HPQuickDrop",
+      "name": "HP QuickDrop",
+      "description": "Sends files between your phone and PC. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.HPEasyClean",
+      "name": "HP Easy Clean",
+      "description": "Locks the keyboard and screen while you clean them. Keep it if you use it.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "AD2F1837.HPPrinterControl",
+      "name": "HP Smart",
+      "description": "HP's printer app. Keep it if you have an HP printer.",
+      "recommendation": "optional"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "./preset.schema.json",
+  "id": "asus-extras",
+  "name": "Asus extras",
+  "description": "Extra software Asus put on the PC. Tools that keep your drivers and BIOS up to date are kept.",
+  "tier": "pro",
+  "items": [
+    {
+      "type": "store",
+      "match": "B9ECED6F.ASUSPCAssistant",
+      "name": "MyASUS",
+      "description": "Keeps your Asus PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "MyASUS*",
+      "name": "MyASUS",
+      "description": "Keeps your Asus PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "ASUS*"
+    },
+    {
+      "type": "desktop",
+      "match": "ASUS Live Update*",
+      "name": "ASUS Live Update",
+      "description": "Keeps your Asus PC's drivers and BIOS up to date, which fixes problems and security holes. Best kept.",
+      "recommendation": "keep",
+      "publisher": "ASUS*"
+    },
+    {
+      "type": "desktop",
+      "match": "ASUS System Control Interface*",
+      "name": "ASUS System Control Interface",
+      "description": "Lets Windows control the laptop's keys, battery and fans. Best kept.",
+      "recommendation": "keep",
+      "publisher": "ASUS*"
+    },
+    {
+      "type": "desktop",
+      "match": "ASUS Keyboard Hotkeys*",
+      "name": "ASUS Keyboard Hotkeys",
+      "description": "Makes the special keys on Asus keyboards work, like volume and brightness. Best kept.",
+      "recommendation": "keep",
+      "publisher": "ASUS*"
+    },
+    {
+      "type": "store",
+      "match": "B9ECED6F.ASUSKeyboardHotkeys*",
+      "name": "ASUS Keyboard Hotkeys",
+      "description": "Makes the special keys on Asus keyboards work, like volume and brightness. Best kept.",
+      "recommendation": "keep"
+    },
+    {
+      "type": "desktop",
+      "match": "ASUS GiftBox*",
+      "name": "ASUS GiftBox",
+      "description": "Adverts for apps Asus recommends.",
+      "recommendation": "remove",
+      "publisher": "ASUS*"
+    },
+    {
+      "type": "store",
+      "match": "B9ECED6F.ASUSGIFTBOX",
+      "name": "ASUS GiftBox",
+      "description": "Adverts for apps Asus recommends.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "store",
+      "match": "B9ECED6F.ASUSWelcome",
+      "name": "ASUS Welcome",
+      "description": "A welcome tour Asus shows on new PCs. Not needed after the first day.",
+      "recommendation": "remove"
+    },
+    {
+      "type": "desktop",
+      "match": "Armoury Crate*",
+      "name": "Armoury Crate",
+      "description": "Controls fans, lighting and performance on Asus gaming PCs. Keep it if you have one.",
+      "recommendation": "optional",
+      "publisher": "ASUS*"
+    },
+    {
+      "type": "store",
+      "match": "B9ECED6F.ArmouryCrate",
+      "name": "Armoury Crate",
+      "description": "Controls fans, lighting and performance on Asus gaming PCs. Keep it if you have one.",
+      "recommendation": "optional"
+    },
+    {
+      "type": "store",
+      "match": "B9ECED6F.ASUSGlideX",
+      "name": "GlideX",
+      "description": "Shares your phone's screen with the PC. Keep it if you use it.",
+      "recommendation": "optional"
+    }
+  ]
+}

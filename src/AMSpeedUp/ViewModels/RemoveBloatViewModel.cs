@@ -6,6 +6,7 @@ using AMSpeedUp.Core.Inventory;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Platform;
 using AMSpeedUp.Core.Presets;
+using AMSpeedUp.Core.Reports;
 using AMSpeedUp.Core.Undo;
 using AMSpeedUp.Core.VendorTools;
 using AMSpeedUp.Services;
@@ -59,6 +60,12 @@ public sealed partial class RemoveBloatViewModel : ObservableObject
     }
 
     public ObservableCollection<PresetGroupViewModel> Groups { get; } = [];
+
+    /// <summary>Notes what each scan finds, for the before and after report.</summary>
+    public SessionRecord? Session { get; init; }
+
+    /// <summary>Everything the last scan found, for "Do everything recommended".</summary>
+    public IReadOnlyList<MatchedApp> FoundApps => Groups.SelectMany(g => g.Items).Select(i => i.Match).ToList();
 
     public ObservableCollection<RemovedAppViewModel> History { get; } = [];
 
@@ -155,6 +162,7 @@ public sealed partial class RemoveBloatViewModel : ObservableObject
             }
 
             _log.Info($"Scan found {Groups.Sum(g => g.Items.Count)} app(s) the presets suggest looking at: {string.Join(", ", Groups.SelectMany(g => g.Items).Select(i => i.Name))}.");
+            Session?.RecordAppsFound(FoundApps.Count(m => m.Recommendation == Recommendation.Remove));
             HasScanned = true;
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
@@ -220,6 +228,13 @@ public sealed partial class RemoveBloatViewModel : ObservableObject
     }
 
     private bool CanRemove() => !IsBusy && SelectedCount > 0;
+
+    /// <summary>After changes made from elsewhere, such as "Do everything recommended".</summary>
+    public async Task RefreshAfterChangesAsync()
+    {
+        LoadHistory();
+        await ScanAsync().ConfigureAwait(true);
+    }
 
     [RelayCommand]
     private void Reinstall(RemovedAppViewModel item)

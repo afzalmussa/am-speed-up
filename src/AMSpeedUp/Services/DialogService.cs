@@ -35,6 +35,22 @@ public sealed class DialogService(IShellLauncher shell) : IDialogService
         window.ShowDialog();
     }
 
+    public void ShowProRequired(string feature)
+    {
+        var choice = new Choice(
+            "That's part of AM Speed Up Pro",
+            $"{feature} comes with AM Speed Up Pro. Everything else, including all the safety features, stays free.\n\nAlready bought Pro? Click \"Enter licence key\".",
+            PrimaryText: "Close",
+            SecondaryText: "Enter licence key",
+            ExtraText: MainViewModel?.CanGetPro == true ? "Get AM Speed Up Pro" : null,
+            ExtraAction: () => MainViewModel?.GetProCommand.Execute(null));
+
+        if (ChoiceWindow.Show(Owner, choice) == ChoiceResult.Secondary)
+        {
+            ShowLicence();
+        }
+    }
+
     public bool Confirm(string heading, string body, string yesText, string noText) =>
         ChoiceWindow.Show(Owner, new Choice(heading, body, PrimaryText: noText, SecondaryText: yesText)) == ChoiceResult.Secondary;
 
@@ -61,6 +77,22 @@ public sealed class DialogService(IShellLauncher shell) : IDialogService
 
     public void ShowVendorToolProblem(VendorToolInfo tool, string reason) =>
         ChoiceWindow.Show(Owner, VendorToolProblemChoice(tool, reason, shell));
+
+    public void ShowReportSaved(string path)
+    {
+        if (ChoiceWindow.Show(Owner, ReportSavedChoice(path, shell)) == ChoiceResult.Primary)
+        {
+            shell.OpenFile(path);
+        }
+    }
+
+    public static Choice ReportSavedChoice(string path, IShellLauncher shell) =>
+        new("Your report is ready",
+            $"It's saved in your Documents folder as \"{System.IO.Path.GetFileName(path)}\". It opens in your web browser, and you can print it from there.",
+            PrimaryText: "Open report",
+            SecondaryText: "Close",
+            ExtraText: "Show in folder",
+            ExtraAction: () => shell.ShowInFolder(path));
 
     public static Choice VendorToolChoice(VendorToolInfo tool) =>
         new(VendorToolText.ReadyHeading(tool), VendorToolText.ReadyBody(tool),

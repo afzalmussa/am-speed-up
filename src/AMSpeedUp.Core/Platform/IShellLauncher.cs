@@ -31,4 +31,7 @@ public interface IShellLauncher
 
     /// <summary>Opens the Microsoft Store app, searching for an app by name, so it can be reinstalled.</summary>
     bool OpenStoreSearch(string appName);
+
+    /// <summary>Opens File Explorer with the file selected.</summary>
+    bool ShowInFolder(string filePath);
 }

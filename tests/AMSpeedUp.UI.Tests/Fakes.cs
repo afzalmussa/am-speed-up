@@ -61,6 +61,14 @@ internal sealed class FakeShell : IShellLauncher
         StoreSearches.Add(appName);
         return true;
     }
+
+    public List<string> ShownInFolder { get; } = [];
+
+    public bool ShowInFolder(string filePath)
+    {
+        ShownInFolder.Add(filePath);
+        return true;
+    }
 }
 
 internal sealed class FakeDialogs : IDialogService
@@ -76,6 +84,10 @@ internal sealed class FakeDialogs : IDialogService
 
     public void ShowLicence() => LicenceShown++;
 
+    public List<string> ProRequired { get; } = [];
+
+    public void ShowProRequired(string feature) => ProRequired.Add(feature);
+
     public bool ConfirmAnswerForQuestions { get; set; } = true;
 
     public List<string> Questions { get; } = [];
@@ -87,6 +99,10 @@ internal sealed class FakeDialogs : IDialogService
     }
 
     public bool ConfirmAnswer { get; set; }
+
+    public List<string> ReportsSaved { get; } = [];
+
+    public void ShowReportSaved(string path) => ReportsSaved.Add(path);
 
     public List<PlanPreview> Previews { get; } = [];
 

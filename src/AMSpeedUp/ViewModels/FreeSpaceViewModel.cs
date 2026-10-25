@@ -4,6 +4,7 @@ using AMSpeedUp.Core.Cleanup;
 using AMSpeedUp.Core.Configuration;
 using AMSpeedUp.Core.Logging;
 using AMSpeedUp.Core.Platform;
+using AMSpeedUp.Core.Reports;
 using AMSpeedUp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -26,8 +27,19 @@ public sealed partial class FreeSpaceViewModel : ObservableObject
     private string? _driveText;
     private IReadOnlyList<string> _summary = [];
 
-    public FreeSpaceViewModel(ICleanupScanner scanner, ActionRunner runner, ActivityStatus status, IDialogService dialogs, IShellLauncher shell, IAppLog log, AppOptions options)
+    public FreeSpaceViewModel(
+        ICleanupScanner scanner,
+        ActionRunner runner,
+        ActivityStatus status,
+        IDialogService dialogs,
+        IShellLauncher shell,
+        IAppLog log,
+        AppOptions options,
+        LargeFilesViewModel? largeFiles = null,
+        TuneUpViewModel? tuneUp = null)
     {
+        LargeFiles = largeFiles;
+        TuneUp = tuneUp;
         _scanner = scanner;
         _runner = runner;
         _dialogs = dialogs;
@@ -46,6 +58,19 @@ public sealed partial class FreeSpaceViewModel : ObservableObject
     }
 
     public ObservableCollection<CleanupItemViewModel> Items { get; } = [];
+
+    /// <summary>Notes the free space each time it's measured, for the before and after report.</summary>
+    public SessionRecord? Session { get; init; }
+
+    /// <summary>Pro: the large file and duplicate finder shown under the clean-up list.</summary>
+    public LargeFilesViewModel? LargeFiles { get; }
+
+    public bool HasLargeFileFinder => LargeFiles is not null;
+
+    /// <summary>Pro: the monthly tune-up switch.</summary>
+    public TuneUpViewModel? TuneUp { get; }
+
+    public bool HasTuneUp => TuneUp is not null;
 
     public bool IsBusy
     {
@@ -132,6 +157,7 @@ public sealed partial class FreeSpaceViewModel : ObservableObject
             }
 
             DriveText = Describe(result.SystemDrive);
+            Session?.RecordFreeSpace(result.SystemDrive);
             HasScanned = true;
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
