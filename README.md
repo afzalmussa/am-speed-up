@@ -208,7 +208,7 @@ Licensing is behind `ILicenceService`, with a Lemon Squeezy implementation. The 
 
 ### Releases
 
-Pushing a tag like `v0.1.0` runs the release workflow, which tests the code, builds `AMSpeedUp.exe` and attaches it to a GitHub Release named after the tag, with a SHA-256 checksum. The file is always called `AMSpeedUp.exe` so the download link keeps working. A tag with a dash, like `v0.2.0-beta.1`, is published as a pre-release.
+Pushing a tag like `v0.1.0`, or publishing a release with a new tag from the Releases page, runs the release workflow, which tests the code, builds `AMSpeedUp.exe` and attaches it to the GitHub Release for that tag, with a SHA-256 checksum. The file is always called `AMSpeedUp.exe` so the download link keeps working. A tag with a dash, like `v0.2.0-beta.1`, is published as a pre-release.
 
 ### Contributions
 
