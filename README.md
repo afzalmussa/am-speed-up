@@ -14,7 +14,9 @@ It's made by [AM Software](https://www.amsoftware.uk), a small computer repair b
 
 There's nothing to install. Download `AMSpeedUp.exe`, then double-click it to open it. Older versions and the list of changes are on the [Releases page](https://github.com/afzalmussa/am-speed-up/releases).
 
-<!-- Screenshot: main window, Remove bloat tab after a scan -->
+<p align="center">
+  <img src="assets/screenshots/main-window.png" alt="AM Speed Up open on the Remove bloat tab, with a Scan my PC button" width="760">
+</p>
 
 ## Contents
 
@@ -59,9 +61,21 @@ AM Speed Up only offers to remove things on its lists. Anything else on your PC 
 
 Each item is marked "Recommended to remove" (ticked), "Your choice" (not ticked) or "Worth keeping" (not ticked, with the reason). You can untick anything before you confirm.
 
+<p align="center">
+  <img src="assets/screenshots/remove-bloat-results.png" alt="Scan results grouped by list, each app with a short description and a recommendation" width="760">
+</p>
+
 The Startup tab uses [a list of common startup programs](data/startup-known.json) to explain what each one is. If it doesn't recognise a program, it says "Not sure what this is? Leave it on."
 
+<p align="center">
+  <img src="assets/screenshots/startup.png" alt="The Startup tab listing programs that start with Windows, each with an on and off switch" width="760">
+</p>
+
 The Free up space tab clears temporary files, Windows Update leftovers and the caches of Microsoft Edge, Google Chrome and Firefox. A browser's cache is only cleared if that browser is closed. Your passwords, bookmarks and history aren't touched. The Recycle Bin is shown too, but it's never ticked for you, because it holds files you've deleted.
+
+<p align="center">
+  <img src="assets/screenshots/free-up-space.png" alt="The Free up space tab showing how much each kind of clutter would free before anything is deleted" width="760">
+</p>
 
 How the lists work, and how to suggest a new entry, is in [presets/README.md](presets/README.md).
 
@@ -78,6 +92,11 @@ How the lists work, and how to suggest a new entry, is in [presets/README.md](pr
 | **Monthly tune-up**: clears clutter automatically once a month (never removes programs) | | Yes |
 | **Large file and duplicate finder**: find big files and copies, and move them to the Recycle Bin | | Yes |
 | **Before and after report**: a page showing what changed, to keep, print or email | | Yes |
+
+<p align="center">
+  <img src="assets/screenshots/before-and-after-report.png" alt="A before and after report showing free space, startup programs and recommended removals at the start and end of a session" width="760">
+  <br><em>The before and after report (Pro)</em>
+</p>
 
 Pro is a licence key you buy from AM Software. Click **Get Pro** in the app to buy one, then **Enter licence key** to start using it. One key works on a set number of PCs, shown when you buy. To move Pro to a different PC, open **Enter licence key** and click **Remove this PC**.
 
@@ -183,7 +202,7 @@ For testing the app itself on a PC, see [TESTING.md](TESTING.md).
 | `tests/` | The three test projects above |
 | `presets` | The lists of apps the app can offer to remove. See [presets/README.md](presets/README.md) |
 | `data` | `startup-known.json`: plain descriptions and advice for common startup programs |
-| `assets` | Logo, icon and fonts |
+| `assets` | Logo, icon, fonts and the screenshots used in this README |
 
 Licensing is behind `ILicenceService`, with a Lemon Squeezy implementation. The checkout link and store details are in `src/AMSpeedUp.Core/Configuration/appsettings.json`. No API keys or secrets are in the app or this repo: the Lemon Squeezy License API doesn't need one.
 
