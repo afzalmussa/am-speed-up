@@ -1,13 +1,22 @@
 name: Release
 
-# Push a tag like v0.1.0 to publish AMSpeedUp.exe as a GitHub Release.
+# Push a tag like v0.1.0, or publish a release with a new tag from the Releases page,
+# to build AMSpeedUp.exe and attach it to the GitHub Release.
 on:
   push:
     tags:
       - "v*"
+  release:
+    types: [published]
 
 permissions:
   contents: write
+
+# Publishing from the Releases page can start this twice (the new tag and the release), so the
+# second run waits for the first and then just replaces the same files.
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -46,11 +55,20 @@ jobs:
           $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()
           "$hash  AMSpeedUp.exe" | Out-File publish/AMSpeedUp.exe.sha256 -Encoding ascii -NoNewline
 
-      - name: Create GitHub Release
+      # The release may already exist if it was published from the Releases page, which also
+      # creates the tag. Then the files are added to it; otherwise the release is created here.
+      - name: Create the GitHub Release or add the files to it
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $flags = @('--title', $env:TAG, '--generate-notes')
-          if ($env:VERSION.Contains('-')) { $flags += '--prerelease' }
-          gh release create $env:TAG publish/AMSpeedUp.exe publish/AMSpeedUp.exe.sha256 @flags
+          $files = @('publish/AMSpeedUp.exe', 'publish/AMSpeedUp.exe.sha256')
+          gh release view $env:TAG *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $env:TAG @files --clobber
+          } else {
+            $flags = @('--title', $env:TAG, '--generate-notes')
+            if ($env:VERSION.Contains('-')) { $flags += '--prerelease' }
+            gh release create $env:TAG @files @flags
+          }
+          if ($LASTEXITCODE -ne 0) { throw "Couldn't publish the files to release $env:TAG" }
