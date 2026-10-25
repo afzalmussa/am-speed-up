@@ -14,7 +14,7 @@ namespace AMSpeedUp.UI.Tests;
 /// </summary>
 internal static class Screenshots
 {
-    public static BitmapSource Render(Window window, string name, double width, double? height = null, double scale = 1.0)
+    public static BitmapSource Render(Window window, string name, double width, double? height = null, double scale = 1.0, Action<FrameworkElement>? inspect = null)
     {
         var content = (UIElement)window.Content;
         window.Content = null;
@@ -40,6 +40,7 @@ internal static class Screenshots
         var finalHeight = height ?? frame.DesiredSize.Height;
         frame.Arrange(new Rect(0, 0, width, finalHeight));
         frame.UpdateLayout();
+        inspect?.Invoke(frame);
 
         var bitmap = new RenderTargetBitmap(
             (int)Math.Ceiling(width * scale), (int)Math.Ceiling(finalHeight * scale),
