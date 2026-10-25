@@ -65,19 +65,42 @@ internal static class LayoutCheck
             Brushes.Black,
             1.0);
         var needed = formatted.Width + text.Padding.Left + text.Padding.Right;
-        if (needed > text.ActualWidth + 1)
+        var visible = VisibleWidth(text);
+        if (needed > visible + 1)
         {
-            problems.Add($"Text cut off ({needed:0} wide in {text.ActualWidth:0}): \"{text.Text}\"");
+            problems.Add($"Text cut off ({needed:0} wide in {visible:0}): \"{text.Text}\"");
         }
     }
 
     private static void CheckRightEdge(FrameworkElement root, FrameworkElement element, List<string> problems)
     {
-        var bounds = element.TransformToAncestor(root).TransformBounds(new Rect(element.RenderSize));
+        var bounds = element.TransformToAncestor(root).TransformBounds(new Rect(0, 0, VisibleWidth(element), element.RenderSize.Height));
         if (bounds.Right > root.ActualWidth + 1 || bounds.Left < -1)
         {
             problems.Add($"Goes past the edge ({bounds.Left:0} to {bounds.Right:0} in {root.ActualWidth:0}): {Describe(element)}");
         }
+    }
+
+    /// <summary>
+    /// How much of an element's width is really on screen. When an element is given less room than
+    /// its content needs (a fixed Width, a MaxWidth or a narrow layout slot), WPF keeps the full size
+    /// in ActualWidth and clips the rest.
+    /// </summary>
+    private static double VisibleWidth(FrameworkElement element)
+    {
+        var width = Math.Min(element.ActualWidth, element.MaxWidth);
+        if (!double.IsNaN(element.Width))
+        {
+            width = Math.Min(width, element.Width);
+        }
+
+        var slot = LayoutInformation.GetLayoutSlot(element);
+        if (slot.Width > 0)
+        {
+            width = Math.Min(width, slot.Width - element.Margin.Left - element.Margin.Right);
+        }
+
+        return width;
     }
 
     private static string Describe(FrameworkElement element) => element switch
